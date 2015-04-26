@@ -84,6 +84,7 @@
     <ClInclude Include="manager.h" />
     <ClInclude Include="page.h" />
     <ClInclude Include="screen.h" />
+    <ClInclude Include="start_game_level_page.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common.cpp" />
@@ -95,6 +96,7 @@
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="page.cpp" />
     <ClCompile Include="screen.cpp" />
+    <ClCompile Include="start_game_level_page.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

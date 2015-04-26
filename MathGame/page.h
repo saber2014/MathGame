@@ -7,6 +7,7 @@ class Page
 {
 public:
 	Page();
+	virtual ~Page();
 
 	virtual char *GetName() = 0;
 	virtual void Print() = 0;

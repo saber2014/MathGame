@@ -5,3 +5,7 @@ Page::Page()
 {
 	g_pConsole->Clear();
 }
+
+Page::~Page()
+{
+}

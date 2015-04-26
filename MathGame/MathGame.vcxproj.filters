@@ -39,6 +39,9 @@
     <ClInclude Include="instructions_page.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="start_game_level_page.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="console.cpp">
@@ -66,6 +69,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="instructions_page.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="start_game_level_page.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

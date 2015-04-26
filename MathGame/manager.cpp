@@ -4,6 +4,7 @@
 #include "keyboard.h"
 #include "main_menu_page.h"
 #include "instructions_page.h"
+#include "start_game_level_page.h"
 
 Manager::Manager()
 {
@@ -63,6 +64,8 @@ void Manager::Run()
 					run = false;
 				else if (!strcmp(this->m_pCurrentPage->GetName(), "Instructions"))
 					this->SwitchPage(new MainMenuPage());
+				else if (!strcmp(this->m_pCurrentPage->GetName(), "Start Game Level"))
+					this->SwitchPage(new MainMenuPage());
 			}
 			else if (*it == KEY_ENTER)
 			{
@@ -76,10 +79,21 @@ void Manager::Run()
 						this->SwitchPage(new InstructionsPage());
 						break;
 
+					case MAIN_MENU_ITEM_START_GAME_LEVEL:
+						this->SwitchPage(new StartGameLevelPage());
+						break;
+
 					case MAIN_MENU_ITEM_EXIT:
 						run = false;
 						break;
 					}
+				}
+				else if (!strcmp(this->m_pCurrentPage->GetName(), "Start Game Level"))
+				{
+					StartGameLevelPage *pStartGameLevelPage = dynamic_cast<StartGameLevelPage *>(this->m_pCurrentPage);
+					int levelNumber = pStartGameLevelPage->GetLevelNumber();
+
+					//
 				}
 			}
 			else
@@ -94,7 +108,7 @@ void Manager::Run()
 
 					for (list<char>::iterator it2 = myList2.begin(); it2 != myList2.end(); it2++)
 					{
-						if (*it2 == KEY_ENTER || *it2 == KEY_ESC)
+						if (*it != *it2)
 							myList.push_back(*it2);
 					}
 				}
