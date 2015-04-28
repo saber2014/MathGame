@@ -36,7 +36,9 @@ public:
 	~Screen();
 
 	int NormalizeX(int nX);
+	int NormalizeGameX(int nX);
 	int NormalizeY(int nY);
+	int NormalizeGameY(int nY);
 	void Print(char *pszText, int nX, int nY, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor);
 	void PrintAligned(char *pszText, int align, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor);
 	char GetAt(int nX, int nY);

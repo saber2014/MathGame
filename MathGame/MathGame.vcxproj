@@ -78,23 +78,27 @@
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="console.h" />
+    <ClInclude Include="game_page.h" />
     <ClInclude Include="instructions_page.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="main_menu_page.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="page.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="screen.h" />
     <ClInclude Include="start_game_level_page.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common.cpp" />
     <ClCompile Include="console.cpp" />
+    <ClCompile Include="game_page.cpp" />
     <ClCompile Include="instructions_page.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_menu_page.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="page.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="screen.cpp" />
     <ClCompile Include="start_game_level_page.cpp" />
   </ItemGroup>

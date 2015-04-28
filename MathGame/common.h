@@ -15,6 +15,7 @@ using namespace std;
 #define	HEIGHT 25
 
 #define WAIT_TIME 100
+#define GAME_WAIT_TIME 200
 
 extern class Console *g_pConsole;
 extern class Screen *g_pScreen;

@@ -4,6 +4,7 @@
 #include "keyboard.h"
 #include "main_menu_page.h"
 #include "instructions_page.h"
+#include "game_page.h"
 #include "start_game_level_page.h"
 
 Manager::Manager()
@@ -79,6 +80,10 @@ void Manager::Run()
 						this->SwitchPage(new InstructionsPage());
 						break;
 
+					case MAIN_MENU_ITEM_START_GAME:
+						this->SwitchPage(new GamePage());
+						break;
+
 					case MAIN_MENU_ITEM_START_GAME_LEVEL:
 						this->SwitchPage(new StartGameLevelPage());
 						break;
@@ -113,6 +118,14 @@ void Manager::Run()
 					}
 				}
 			}
+		}
+
+		if (!strcmp(this->m_pCurrentPage->GetName(), "Game"))
+		{
+			GamePage *pGamePage = dynamic_cast<GamePage *>(this->m_pCurrentPage);
+			pGamePage->Tick();
+
+			g_pConsole->Wait(GAME_WAIT_TIME);
 		}
 	}
 }

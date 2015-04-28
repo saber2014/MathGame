@@ -14,9 +14,23 @@ int Screen::NormalizeX(int nX)
 	return nX % WIDTH;
 }
 
+int Screen::NormalizeGameX(int nX)
+{
+	if (nX < 0) return WIDTH - 1;
+	else if (nX > WIDTH - 1) return 0;
+	else return nX;
+}
+
 int Screen::NormalizeY(int nY)
 {
 	return nY % HEIGHT;
+}
+
+int Screen::NormalizeGameY(int nY)
+{
+	if (nY < 3) return HEIGHT - 1;
+	else if (nY > HEIGHT - 1) return 3;
+	else return nY;
 }
 
 void Screen::Print(char *pszText, int nX, int nY, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor)
