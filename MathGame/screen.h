@@ -41,6 +41,7 @@ public:
 	int NormalizeGameY(int nY);
 	void Print(char *pszText, int nX, int nY, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor);
 	void PrintAligned(char *pszText, int align, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor);
+	void SetAt(char ch, int nX, int nY);
 	char GetAt(int nX, int nY);
 	void PrintMessage(char *pszMessage, SCREEN_MESSAGE_STYLE style);
 	void PrintBottomMessage(char *pszMessage, SCREEN_MESSAGE_STYLE style);

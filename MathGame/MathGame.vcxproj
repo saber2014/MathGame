@@ -83,9 +83,11 @@
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="main_menu_page.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="moving_object.h" />
     <ClInclude Include="page.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="screen.h" />
+    <ClInclude Include="shot.h" />
     <ClInclude Include="start_game_level_page.h" />
   </ItemGroup>
   <ItemGroup>
@@ -97,9 +99,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_menu_page.cpp" />
     <ClCompile Include="manager.cpp" />
+    <ClCompile Include="moving_object.cpp" />
     <ClCompile Include="page.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="screen.cpp" />
+    <ClCompile Include="shot.cpp" />
     <ClCompile Include="start_game_level_page.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

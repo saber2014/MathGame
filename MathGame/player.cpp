@@ -1,17 +1,22 @@
 #include "player.h"
 #include "screen.h"
 
-Player::Player(int x, int y, int sign, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor, PLAYER_MOVE direction)
+Player::Player(int x, int y, int sign, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor, OBJECT_MOVE direction, CONSOLE_COLOR shotColor)
+	: MovingObject(x, y, sign, foregroundColor, backgroundColor, direction)
 {
+	this->m_shotColor = shotColor;
+	this->m_defaultX = x;
+	this->m_defaultY = y;
+	this->m_defaultDirection = direction;
+	this->m_killed = false;
 	this->m_points = 0;
 	this->m_attempts = 3;
-	
-	this->m_x = x;
-	this->m_y = y;
-	this->m_sign = sign;
-	this->m_foregroundColor = foregroundColor;
-	this->m_backgroundColor = backgroundColor;
-	this->m_direction = direction;
+	this->m_shots = 5;
+}
+
+bool Player::IsKilled()
+{
+	return this->m_killed;
 }
 
 int Player::GetPoints()
@@ -24,45 +29,59 @@ int Player::GetAttempts()
 	return this->m_attempts;
 }
 
-void Player::SetDirection(PLAYER_MOVE direction)
+int Player::GetShots()
 {
-	this->m_direction = direction;
+	return this->m_shots;
 }
 
-void Player::Print()
+list<Shot> &Player::GetShotsList()
 {
-	char buf[2] = { this->m_sign, 0 };
-
-	g_pConsole->SetPosition(this->m_x, this->m_y);
-	g_pScreen->PrintAligned(buf, SCREEN_ALIGN_DEFAULT, this->m_foregroundColor, this->m_backgroundColor);
+	return this->m_shotsList;
 }
 
-void Player::Clear()
+void Player::Shoot()
 {
-	g_pConsole->SetPosition(this->m_x, this->m_y);
-	g_pScreen->PrintAligned(" ", SCREEN_ALIGN_DEFAULT, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_DEFAULT);
-}
-
-void Player::Move()
-{
-	switch (this->m_direction)
+	if (this->m_shots > 0)
 	{
-	case PLAYER_MOVE_UP:
-		this->m_y = g_pScreen->NormalizeGameY(this->m_y - 1);
-		break;
+		this->m_shots--;
 
-	case PLAYER_MOVE_RIGHT:
-		this->m_x = g_pScreen->NormalizeGameX(this->m_x + 1);
-		break;
+		switch (this->m_direction)
+		{
+		case OBJECT_MOVE_UP:
+			this->m_shotsList.push_back(Shot(this->m_x, g_pScreen->NormalizeGameY(this->m_y - 1), this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction));
+			break;
 
-	case PLAYER_MOVE_DOWN:
-		this->m_y = g_pScreen->NormalizeGameY(this->m_y + 1);
-		break;
+		case OBJECT_MOVE_RIGHT:
+			this->m_shotsList.push_back(Shot(g_pScreen->NormalizeGameX(this->m_x + 1), this->m_y, this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction));
+			break;
 
-	case PLAYER_MOVE_LEFT:
-		this->m_x = g_pScreen->NormalizeGameX(this->m_x - 1);
-		break;
+		case OBJECT_MOVE_DOWN:
+			this->m_shotsList.push_back(Shot(this->m_x, g_pScreen->NormalizeGameY(this->m_y + 1), this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction));
+			break;
+
+		case OBJECT_MOVE_LEFT:
+			this->m_shotsList.push_back(Shot(g_pScreen->NormalizeGameX(this->m_x - 1), this->m_y, this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction));
+			break;
+		}
+
+		this->m_shotsList.back().Print();
 	}
+}
 
-	this->Print();
+void Player::Kill()
+{
+	this->Clear();
+
+	if (this->m_attempts > 0)
+	{
+		this->m_attempts--;
+
+		this->m_x = this->m_defaultX;
+		this->m_y = this->m_defaultY;
+		this->m_direction = this->m_defaultDirection;
+		
+		this->Print();
+	}
+	else
+		this->m_killed = true;
 }

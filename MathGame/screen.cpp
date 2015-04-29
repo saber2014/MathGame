@@ -111,6 +111,11 @@ void Screen::PrintAligned(char *pszText, int align, CONSOLE_COLOR foregroundColo
 	}
 }
 
+void Screen::SetAt(char ch, int nX, int nY)
+{
+	this->m_ppScreen[this->NormalizeY(nY)][this->NormalizeX(nX)] = ch;
+}
+
 char Screen::GetAt(int nX, int nY)
 {
 	return this->m_ppScreen[this->NormalizeY(nY)][this->NormalizeX(nX)];

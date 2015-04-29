@@ -1,39 +1,33 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-enum CONSOLE_COLOR;
+#include "common.h"
+#include "moving_object.h"
+#include "shot.h"
 
-enum PLAYER_MOVE
-{
-	PLAYER_MOVE_UP = 1,
-	PLAYER_MOVE_RIGHT,
-	PLAYER_MOVE_DOWN,
-	PLAYER_MOVE_LEFT
-};
-
-class Player
+class Player : public MovingObject
 {
 private:
+	CONSOLE_COLOR m_shotColor;
+	int m_defaultX;
+	int m_defaultY;
+	OBJECT_MOVE m_defaultDirection;
+	bool m_killed;
 	int m_points;
 	int m_attempts;
-
-	int m_x;
-	int m_y;
-	char m_sign;
-	CONSOLE_COLOR m_foregroundColor;
-	CONSOLE_COLOR m_backgroundColor;
-	PLAYER_MOVE m_direction;
+	int m_shots;
+	list<Shot> m_shotsList;
 
 public:
-	Player(int x, int y, int sign, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor, PLAYER_MOVE direction);
+	Player(int x, int y, int sign, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor, OBJECT_MOVE direction, CONSOLE_COLOR shotColor);
 
+	bool IsKilled();
 	int GetPoints();
 	int GetAttempts();
-	void SetDirection(PLAYER_MOVE direction);
-	void Print();
-
-	void Clear();
-	void Move();
+	int GetShots();
+	list<Shot> &GetShotsList();
+	void Shoot();
+	void Kill();
 };
 
 #endif

@@ -23,6 +23,8 @@ public:
 	void PrintPlayerHeader(int player);
 	void PrintCounter();
 	void PrintHeader();
+	void MoveShots(list<Shot> &shotsList);
+	void HalfTick();
 	void Tick();
 };
 

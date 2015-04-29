@@ -123,9 +123,15 @@ void Manager::Run()
 		if (!strcmp(this->m_pCurrentPage->GetName(), "Game"))
 		{
 			GamePage *pGamePage = dynamic_cast<GamePage *>(this->m_pCurrentPage);
-			pGamePage->Tick();
 
-			g_pConsole->Wait(GAME_WAIT_TIME);
+			g_pConsole->Wait(GAME_WAIT_TIME / 2);
+
+			pGamePage->HalfTick();
+
+			g_pConsole->Wait(GAME_WAIT_TIME / 2);
+
+			pGamePage->HalfTick();
+			pGamePage->Tick();
 		}
 	}
 }

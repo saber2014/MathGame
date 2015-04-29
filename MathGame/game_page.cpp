@@ -3,8 +3,8 @@
 
 GamePage::GamePage()
 	:
-	m_player1(10, 9, '#', CONSOLE_COLOR_LIGHT_PURPLE, CONSOLE_COLOR_DEFAULT, PLAYER_MOVE_RIGHT),
-	m_player2(70, 9, '@', CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_DEFAULT, PLAYER_MOVE_LEFT)
+	m_player1(10, 9, '#', CONSOLE_COLOR_LIGHT_PURPLE, CONSOLE_COLOR_DEFAULT, OBJECT_MOVE_RIGHT, CONSOLE_COLOR_PURPLE),
+	m_player2(70, 9, '@', CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_DEFAULT, OBJECT_MOVE_LEFT, CONSOLE_COLOR_AQUA)
 {
 	this->m_level = 1;
 	this->m_counter = 0;
@@ -28,35 +28,45 @@ void GamePage::KeyEvent(char key)
 	switch (key)
 	{
 	case 'w':
-		this->m_player1.SetDirection(PLAYER_MOVE_UP);
+		this->m_player1.SetDirection(OBJECT_MOVE_UP);
 		break;
 
 	case 'd':
-		this->m_player1.SetDirection(PLAYER_MOVE_RIGHT);
+		this->m_player1.SetDirection(OBJECT_MOVE_RIGHT);
 		break;
 
 	case 'x':
-		this->m_player1.SetDirection(PLAYER_MOVE_DOWN);
+		this->m_player1.SetDirection(OBJECT_MOVE_DOWN);
 		break;
 
 	case 'a':
-		this->m_player1.SetDirection(PLAYER_MOVE_LEFT);
+		this->m_player1.SetDirection(OBJECT_MOVE_LEFT);
+		break;
+
+	case 'z':
+		this->m_player1.Shoot();
+		this->PrintPlayerHeader(1);
 		break;
 
 	case 'i':
-		this->m_player2.SetDirection(PLAYER_MOVE_UP);
+		this->m_player2.SetDirection(OBJECT_MOVE_UP);
 		break;
 
 	case 'l':
-		this->m_player2.SetDirection(PLAYER_MOVE_RIGHT);
+		this->m_player2.SetDirection(OBJECT_MOVE_RIGHT);
 		break;
 
 	case 'm':
-		this->m_player2.SetDirection(PLAYER_MOVE_DOWN);
+		this->m_player2.SetDirection(OBJECT_MOVE_DOWN);
 		break;
 
 	case 'j':
-		this->m_player2.SetDirection(PLAYER_MOVE_LEFT);
+		this->m_player2.SetDirection(OBJECT_MOVE_LEFT);
+		break;
+
+	case 'n':
+		this->m_player2.Shoot();
+		this->PrintPlayerHeader(2);
 		break;
 	}
 }
@@ -70,12 +80,12 @@ void GamePage::PrintPlayerHeader(int player)
 	switch (player)
 	{
 	case 1:
-		sprintf(buf, "PLAYER 1: %d / %d", this->m_player1.GetPoints(), this->m_player1.GetAttempts());
+		sprintf(buf, "PLAYER 1: %d / %d / %d", this->m_player1.GetPoints(), this->m_player1.GetAttempts(), this->m_player1.GetShots());
 		g_pScreen->PrintAligned(buf, SCREEN_ALIGN_LEFT, CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_GRAY);
 		break;
 
 	case 2:
-		sprintf(buf, "PLAYER 2: %d / %d", this->m_player2.GetPoints(), this->m_player2.GetAttempts());
+		sprintf(buf, "PLAYER 2: %d / %d / %d", this->m_player2.GetPoints(), this->m_player2.GetAttempts(), this->m_player2.GetShots());
 		g_pScreen->PrintAligned(buf, SCREEN_ALIGN_RIGHT, CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_GRAY);
 		break;
 	}
@@ -114,14 +124,64 @@ void GamePage::PrintHeader()
 	this->PrintCounter();
 }
 
+void GamePage::MoveShots(list<Shot> &shotsList)
+{
+	list<Shot>::iterator it = shotsList.begin();
+
+	while (it != shotsList.end())
+	{
+		if (it->IsPossibleToMove())
+		{
+			it->Move();
+			it++;
+		}
+		else
+		{
+			BLOCKING_OBJECT bo = it->GetBlockingObject();
+
+			switch (bo)
+			{
+			case BLOCKING_OBJECT_PLAYER1:
+				this->m_player1.Kill();
+				this->PrintPlayerHeader(1);
+				break;
+
+			case BLOCKING_OBJECT_PLAYER2:
+				this->m_player2.Kill();
+				this->PrintPlayerHeader(2);
+				break;
+			}
+
+			list<Shot>::iterator temp = it;
+			it++;
+
+			temp->Clear();
+			shotsList.erase(temp);
+		}
+	}
+}
+
+void GamePage::HalfTick()
+{
+	this->MoveShots(this->m_player1.GetShotsList());
+	this->MoveShots(this->m_player2.GetShotsList());
+}
+
 void GamePage::Tick()
 {
 	this->m_counter++;
 	this->PrintCounter();
 
-	this->m_player1.Clear();
-	this->m_player2.Clear();
+	bool move_player1 = this->m_player1.IsPossibleToMove();
 
-	this->m_player1.Move();
-	this->m_player2.Move();
+	if (!this->m_player1.IsKilled())
+		this->m_player1.Move();
+
+	bool move_player2 = this->m_player2.IsPossibleToMove();
+	
+	if (!this->m_player2.IsKilled())
+		this->m_player2.Move();
+
+	if (!this->m_player1.IsKilled() && !move_player1) this->m_player1.Move();
+	if (!this->m_player2.IsKilled() && !move_player2) this->m_player2.Move();
 }
