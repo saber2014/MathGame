@@ -189,3 +189,19 @@ void Screen::PrintBottomMessage(char *pszMessage, SCREEN_MESSAGE_STYLE style)
 
 	this->PrintAligned(pszMessage, SCREEN_ALIGN_HCENTER | SCREEN_ALIGN_BOTTOM, GetStylizedForeground(style), GetStylizedBackground(style));
 }
+
+OBJECT_TYPE Screen::GetObjectAt(int x, int y)
+{
+	char ch = this->GetAt(this->NormalizeGameX(x), this->NormalizeGameY(y));
+
+	if (ch == '#')
+		return OBJECT_TYPE_PLAYER1;
+	else if (ch == '@')
+		return OBJECT_TYPE_PLAYER2;
+	else if ('0' <= ch && ch <= '9')
+		return OBJECT_TYPE_NUMBER;
+	else if (ch == '*')
+		return OBJECT_TYPE_SHOT;
+
+	return OBJECT_TYPE_NONE;
+}

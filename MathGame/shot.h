@@ -4,14 +4,7 @@
 #include "common.h"
 #include "moving_object.h"
 
-enum BLOCKING_OBJECT
-{
-	BLOCKING_OBJECT_NONE = 0,
-	BLOCKING_OBJECT_PLAYER1,
-	BLOCKING_OBJECT_PLAYER2,
-	BLOCKING_OBJECT_NUMBER,
-	BLOCKING_OBJECT_SHOT
-};
+enum OBJECT_TYPE;
 
 class Shot : public MovingObject
 {
@@ -24,7 +17,7 @@ public:
 	void Move(float count);
 
 	float GetLastMove();
-	BLOCKING_OBJECT GetBlockingObject();
+	OBJECT_TYPE GetBlockingObject();
 };
 
 #endif

@@ -27,7 +27,7 @@ public:
 	int GetShots();
 	list<Shot> &GetShotsList();
 	void AddShot();
-	void Shoot(float count);
+	bool Shoot(float count);
 	void Kill();
 };
 

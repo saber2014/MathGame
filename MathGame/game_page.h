@@ -26,8 +26,10 @@ public:
 	void PrintPlayerHeader(int player);
 	void PrintCounter();
 	void PrintHeader();
-	bool FindAndRemoveShot(int x, int y);
+	Shot &GetShotAt(int x, int y);
 	void MoveShots(list<Shot> &shotsList);
+	void RemoveShot(int x, int y);
+	void RemoveObject(int x, int y);
 	void GenerateNumber();
 	void HalfTick();
 	void Tick();

@@ -44,7 +44,7 @@ void Player::AddShot()
 	this->m_shots++;
 }
 
-void Player::Shoot(float count)
+bool Player::Shoot(float count)
 {
 	if (this->m_shots > 0)
 	{
@@ -53,24 +53,38 @@ void Player::Shoot(float count)
 		switch (this->m_direction)
 		{
 		case OBJECT_MOVE_UP:
+			if (g_pScreen->GetAt(this->m_x, g_pScreen->NormalizeGameY(this->m_y - 1)) != ' ')
+				return false;
+
 			this->m_shotsList.push_back(Shot(this->m_x, g_pScreen->NormalizeGameY(this->m_y - 1), this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction, count));
 			break;
 
 		case OBJECT_MOVE_RIGHT:
+			if (g_pScreen->GetAt(g_pScreen->NormalizeGameX(this->m_x + 1), this->m_y) != ' ')
+				return false;
+			
 			this->m_shotsList.push_back(Shot(g_pScreen->NormalizeGameX(this->m_x + 1), this->m_y, this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction, count));
 			break;
 
 		case OBJECT_MOVE_DOWN:
+			if (g_pScreen->GetAt(this->m_x, g_pScreen->NormalizeGameY(this->m_y + 1)) != ' ')
+				return false;
+
 			this->m_shotsList.push_back(Shot(this->m_x, g_pScreen->NormalizeGameY(this->m_y + 1), this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction, count));
 			break;
 
 		case OBJECT_MOVE_LEFT:
+			if (g_pScreen->GetAt(g_pScreen->NormalizeGameX(this->m_x - 1), this->m_y) != ' ')
+				return false;
+			
 			this->m_shotsList.push_back(Shot(g_pScreen->NormalizeGameX(this->m_x - 1), this->m_y, this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction, count));
 			break;
 		}
 
 		this->m_shotsList.back().Print();
 	}
+
+	return true;
 }
 
 void Player::Kill()

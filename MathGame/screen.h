@@ -26,6 +26,15 @@ enum SCREEN_MESSAGE_STYLE
 	SCREEN_MESSAGE_STYLE_YELLOW,
 };
 
+enum OBJECT_TYPE
+{
+	OBJECT_TYPE_NONE = 0,
+	OBJECT_TYPE_PLAYER1,
+	OBJECT_TYPE_PLAYER2,
+	OBJECT_TYPE_NUMBER,
+	OBJECT_TYPE_SHOT
+};
+
 class Screen
 {
 private:
@@ -45,6 +54,7 @@ public:
 	char GetAt(int nX, int nY);
 	void PrintMessage(char *pszMessage, SCREEN_MESSAGE_STYLE style);
 	void PrintBottomMessage(char *pszMessage, SCREEN_MESSAGE_STYLE style);
+	OBJECT_TYPE GetObjectAt(int x, int y);
 };
 
 #endif
