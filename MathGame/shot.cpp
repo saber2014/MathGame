@@ -1,9 +1,23 @@
 #include "shot.h"
 #include "screen.h"
 
-Shot::Shot(int x, int y, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor, OBJECT_MOVE direction)
+Shot::Shot(int x, int y, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor, OBJECT_MOVE direction, float count)
 	: MovingObject(x, y, '*', foregroundColor, backgroundColor, direction)
 {
+	this->m_lastMove = count;
+}
+
+void Shot::Move(float count)
+{
+	if (this->m_lastMove != count)
+		MovingObject::Move();
+
+	this->m_lastMove = count;
+}
+
+float Shot::GetLastMove()
+{
+	return this->m_lastMove;
 }
 
 BLOCKING_OBJECT Shot::GetBlockingObject()

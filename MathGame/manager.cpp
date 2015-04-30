@@ -124,14 +124,14 @@ void Manager::Run()
 		{
 			GamePage *pGamePage = dynamic_cast<GamePage *>(this->m_pCurrentPage);
 
-			g_pConsole->Wait(GAME_WAIT_TIME / 2);
-
-			pGamePage->HalfTick();
-
-			g_pConsole->Wait(GAME_WAIT_TIME / 2);
-
 			pGamePage->HalfTick();
 			pGamePage->Tick();
+
+			g_pConsole->Wait(GAME_WAIT_TIME / 2);
+
+			pGamePage->HalfTick();
+
+			g_pConsole->Wait(GAME_WAIT_TIME / 2);
 		}
 	}
 }

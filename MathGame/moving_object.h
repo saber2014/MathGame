@@ -31,6 +31,13 @@ public:
 	void SetDirection(OBJECT_MOVE direction);
 	bool IsPossibleToMove();
 	void Move();
+	int GetX();
+	int GetY();
+	int GetNextX();
+	int GetNextY();
+	CONSOLE_COLOR GetForegroundColor();
+	CONSOLE_COLOR GetBackgroundColor();
+	OBJECT_MOVE GetDirection();
 };
 
 #endif

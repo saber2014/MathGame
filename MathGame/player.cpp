@@ -39,7 +39,12 @@ list<Shot> &Player::GetShotsList()
 	return this->m_shotsList;
 }
 
-void Player::Shoot()
+void Player::AddShot()
+{
+	this->m_shots++;
+}
+
+void Player::Shoot(float count)
 {
 	if (this->m_shots > 0)
 	{
@@ -48,19 +53,19 @@ void Player::Shoot()
 		switch (this->m_direction)
 		{
 		case OBJECT_MOVE_UP:
-			this->m_shotsList.push_back(Shot(this->m_x, g_pScreen->NormalizeGameY(this->m_y - 1), this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction));
+			this->m_shotsList.push_back(Shot(this->m_x, g_pScreen->NormalizeGameY(this->m_y - 1), this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction, count));
 			break;
 
 		case OBJECT_MOVE_RIGHT:
-			this->m_shotsList.push_back(Shot(g_pScreen->NormalizeGameX(this->m_x + 1), this->m_y, this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction));
+			this->m_shotsList.push_back(Shot(g_pScreen->NormalizeGameX(this->m_x + 1), this->m_y, this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction, count));
 			break;
 
 		case OBJECT_MOVE_DOWN:
-			this->m_shotsList.push_back(Shot(this->m_x, g_pScreen->NormalizeGameY(this->m_y + 1), this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction));
+			this->m_shotsList.push_back(Shot(this->m_x, g_pScreen->NormalizeGameY(this->m_y + 1), this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction, count));
 			break;
 
 		case OBJECT_MOVE_LEFT:
-			this->m_shotsList.push_back(Shot(g_pScreen->NormalizeGameX(this->m_x - 1), this->m_y, this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction));
+			this->m_shotsList.push_back(Shot(g_pScreen->NormalizeGameX(this->m_x - 1), this->m_y, this->m_shotColor, CONSOLE_COLOR_DEFAULT, this->m_direction, count));
 			break;
 		}
 

@@ -15,9 +15,15 @@ enum BLOCKING_OBJECT
 
 class Shot : public MovingObject
 {
-public:
-	Shot(int x, int y, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor, OBJECT_MOVE direction);
+private:
+	float m_lastMove;
 
+public:
+	Shot(int x, int y, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor, OBJECT_MOVE direction, float count);
+
+	void Move(float count);
+
+	float GetLastMove();
 	BLOCKING_OBJECT GetBlockingObject();
 };
 

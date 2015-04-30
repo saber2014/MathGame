@@ -89,3 +89,60 @@ void MovingObject::Move()
 
 	this->Print();
 }
+
+int MovingObject::GetX()
+{
+	return this->m_x;
+}
+
+int MovingObject::GetY()
+{
+	return this->m_y;
+}
+
+int MovingObject::GetNextX()
+{
+	switch (this->m_direction)
+	{
+	case OBJECT_MOVE_RIGHT:
+		return g_pScreen->NormalizeGameX(this->m_x + 1);
+		break;
+
+	case OBJECT_MOVE_LEFT:
+		return g_pScreen->NormalizeGameX(this->m_x - 1);
+		break;
+	}
+
+	return this->m_x;
+}
+
+int MovingObject::GetNextY()
+{
+	switch (this->m_direction)
+	{
+	case OBJECT_MOVE_UP:
+		return g_pScreen->NormalizeGameY(this->m_y - 1);
+		break;
+
+	case OBJECT_MOVE_DOWN:
+		return g_pScreen->NormalizeGameY(this->m_y + 1);
+		break;
+	}
+
+	return this->m_y;
+}
+
+CONSOLE_COLOR MovingObject::GetForegroundColor()
+{
+	return this->m_foregroundColor;
+}
+
+CONSOLE_COLOR MovingObject::GetBackgroundColor()
+{
+	return this->m_backgroundColor;
+}
+
+OBJECT_MOVE MovingObject::GetDirection()
+{
+	return this->m_direction;
+}

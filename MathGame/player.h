@@ -26,7 +26,8 @@ public:
 	int GetAttempts();
 	int GetShots();
 	list<Shot> &GetShotsList();
-	void Shoot();
+	void AddShot();
+	void Shoot(float count);
 	void Kill();
 };
 

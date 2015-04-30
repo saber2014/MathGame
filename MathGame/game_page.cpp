@@ -8,6 +8,8 @@ GamePage::GamePage()
 {
 	this->m_level = 1;
 	this->m_counter = 0;
+
+	srand((unsigned int)time(NULL));
 }
 
 char *GamePage::GetName()
@@ -44,7 +46,7 @@ void GamePage::KeyEvent(char key)
 		break;
 
 	case 'z':
-		this->m_player1.Shoot();
+		this->m_player1.Shoot(this->m_counter);
 		this->PrintPlayerHeader(1);
 		break;
 
@@ -65,7 +67,7 @@ void GamePage::KeyEvent(char key)
 		break;
 
 	case 'n':
-		this->m_player2.Shoot();
+		this->m_player2.Shoot(this->m_counter);
 		this->PrintPlayerHeader(2);
 		break;
 	}
@@ -94,7 +96,7 @@ void GamePage::PrintPlayerHeader(int player)
 void GamePage::PrintCounter()
 {
 	char buf[255] = {};
-	sprintf(buf, "%d", this->m_counter);
+	sprintf(buf, "%d", (int)this->m_counter);
 
 	g_pConsole->SetPosition(0, 1);
 	g_pScreen->PrintAligned("          ", SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_GRAY);
@@ -124,6 +126,51 @@ void GamePage::PrintHeader()
 	this->PrintCounter();
 }
 
+bool GamePage::FindAndRemoveShot(int x, int y)
+{
+	list<Shot>::iterator it = this->m_player1.GetShotsList().begin();
+
+	while (it != this->m_player1.GetShotsList().end())
+	{
+		if (it->GetX() == x && it->GetY() == y)
+		{
+			if (this->m_counter != it->GetLastMove())
+			{
+				it->Clear();
+				this->m_player1.GetShotsList().erase(it);
+
+				return true;
+			}
+
+			return false;
+		}
+
+		it++;
+	}
+
+	it = this->m_player2.GetShotsList().begin();
+
+	while (it != this->m_player2.GetShotsList().end())
+	{
+		if (it->GetX() == x && it->GetY() == y)
+		{
+			if (this->m_counter != it->GetLastMove())
+			{
+				it->Clear();
+				this->m_player2.GetShotsList().erase(it);
+
+				return true;
+			}
+
+			return false;
+		}
+
+		it++;
+	}
+
+	return false;
+}
+
 void GamePage::MoveShots(list<Shot> &shotsList)
 {
 	list<Shot>::iterator it = shotsList.begin();
@@ -132,11 +179,13 @@ void GamePage::MoveShots(list<Shot> &shotsList)
 	{
 		if (it->IsPossibleToMove())
 		{
-			it->Move();
+			it->Move(this->m_counter);
 			it++;
 		}
 		else
 		{
+			bool b = false;
+
 			BLOCKING_OBJECT bo = it->GetBlockingObject();
 
 			switch (bo)
@@ -150,26 +199,47 @@ void GamePage::MoveShots(list<Shot> &shotsList)
 				this->m_player2.Kill();
 				this->PrintPlayerHeader(2);
 				break;
+
+			case BLOCKING_OBJECT_SHOT:
+				b = this->FindAndRemoveShot(it->GetNextX(), it->GetNextY());
+				break;
 			}
 
 			list<Shot>::iterator temp = it;
 			it++;
 
-			temp->Clear();
-			shotsList.erase(temp);
+			if (b)
+			{
+				temp->Clear();
+				shotsList.erase(temp);
+			}
 		}
 	}
+}
+
+void GamePage::GenerateNumber()
+{
+	int x = rand() % WIDTH;
+	int y = 3 + rand() % (HEIGHT - 3);
+	int number = rand() % (10 + this->m_level);
+
+	char buf[255];
+	sprintf(buf, "%d", number);
+
+	g_pScreen->SetAt(buf[0], x, y);
+	g_pScreen->Print(buf, x, y, CONSOLE_COLOR_LIGHT_GREEN, CONSOLE_COLOR_GREEN);
 }
 
 void GamePage::HalfTick()
 {
 	this->MoveShots(this->m_player1.GetShotsList());
 	this->MoveShots(this->m_player2.GetShotsList());
+
+	this->m_counter += 0.5;
 }
 
 void GamePage::Tick()
 {
-	this->m_counter++;
 	this->PrintCounter();
 
 	bool move_player1 = this->m_player1.IsPossibleToMove();
@@ -184,4 +254,22 @@ void GamePage::Tick()
 
 	if (!this->m_player1.IsKilled() && !move_player1) this->m_player1.Move();
 	if (!this->m_player2.IsKilled() && !move_player2) this->m_player2.Move();
+
+	if ((int)this->m_counter % ADD_SHOT_TIME == 0)
+	{
+		if (!this->m_player1.IsKilled())
+		{
+			this->m_player1.AddShot();
+			this->PrintPlayerHeader(1);
+		}
+		
+		if (!this->m_player2.IsKilled())
+		{
+			this->m_player2.AddShot();
+			this->PrintPlayerHeader(2);
+		}
+	}
+
+	if ((int)this->m_counter % GENERATE_NUMBER_TIME == 0)
+		this->GenerateNumber();
 }
