@@ -81,7 +81,7 @@ void Manager::Run()
 						break;
 
 					case MAIN_MENU_ITEM_START_GAME:
-						this->SwitchPage(new GamePage());
+						this->SwitchPage(new GamePage(1));
 						break;
 
 					case MAIN_MENU_ITEM_START_GAME_LEVEL:
@@ -98,7 +98,7 @@ void Manager::Run()
 					StartGameLevelPage *pStartGameLevelPage = dynamic_cast<StartGameLevelPage *>(this->m_pCurrentPage);
 					int levelNumber = pStartGameLevelPage->GetLevelNumber();
 
-					//
+					this->SwitchPage(new GamePage(levelNumber));
 				}
 			}
 			else

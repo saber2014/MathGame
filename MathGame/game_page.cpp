@@ -1,15 +1,18 @@
 #include "game_page.h"
 #include "screen.h"
 
-GamePage::GamePage()
+GamePage::GamePage(int level)
 	:
 	m_player1(10, 9, '#', CONSOLE_COLOR_LIGHT_PURPLE, CONSOLE_COLOR_DEFAULT, OBJECT_MOVE_RIGHT, CONSOLE_COLOR_PURPLE),
 	m_player2(70, 9, '@', CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_DEFAULT, OBJECT_MOVE_LEFT, CONSOLE_COLOR_AQUA)
 {
-	this->m_level = 1;
+	this->m_level = level;
 	this->m_counter = 0;
 
 	srand((unsigned int)time(NULL));
+
+	this->m_exercise1.GenerateSimple(this->m_level);
+	this->m_exercise2.GenerateSimple(this->m_level);
 }
 
 char *GamePage::GetName()
@@ -107,6 +110,14 @@ void GamePage::PrintCounter()
 	g_pScreen->PrintAligned(buf, SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_BRIGHT_WHITE, CONSOLE_COLOR_GRAY);
 }
 
+void GamePage::PrintExercises()
+{
+	g_pConsole->SetPosition(0, 2);
+
+	g_pScreen->PrintAligned((char *)this->m_exercise1.GetExercise().c_str(), SCREEN_ALIGN_LEFT, CONSOLE_COLOR_LIGHT_YELLOW, CONSOLE_COLOR_GRAY);
+	g_pScreen->PrintAligned((char *)this->m_exercise2.GetExercise().c_str(), SCREEN_ALIGN_RIGHT, CONSOLE_COLOR_LIGHT_YELLOW, CONSOLE_COLOR_GRAY);
+}
+
 void GamePage::PrintHeader()
 {
 	for (int i = 0; i < 3; i++)
@@ -128,16 +139,36 @@ void GamePage::PrintHeader()
 	this->PrintPlayerHeader(2);
 
 	this->PrintCounter();
+	this->PrintExercises();
 }
 
-Shot &GamePage::GetShotAt(int x, int y)
+int GamePage::GetNumberAt(int x, int y)
+{
+	int ret = 0;
+	int i = x;
+
+	while (i >= 1 && '0' <= g_pScreen->GetAt(i - 1, y) && g_pScreen->GetAt(i - 1, y) <= '9')
+		i--;
+
+	while (i < WIDTH && '0' <= g_pScreen->GetAt(i, y) && g_pScreen->GetAt(i, y) <= '9')
+	{
+		ret *= 10;
+		ret += g_pScreen->GetAt(i, y) - '0';
+
+		i++;
+	}
+
+	return ret;
+}
+
+Shot *GamePage::GetShotAt(int x, int y)
 {
 	list<Shot>::iterator it = this->m_player1.GetShotsList().begin();
 
 	while (it != this->m_player1.GetShotsList().end())
 	{
 		if (it->GetX() == x && it->GetY() == y)
-			return *it;
+			return &*it;
 
 		it++;
 	}
@@ -147,10 +178,12 @@ Shot &GamePage::GetShotAt(int x, int y)
 	while (it != this->m_player2.GetShotsList().end())
 	{
 		if (it->GetX() == x && it->GetY() == y)
-			return *it;
+			return &*it;
 
 		it++;
 	}
+
+	return NULL;
 }
 
 void GamePage::MoveShots(list<Shot> &shotsList)
@@ -168,9 +201,9 @@ void GamePage::MoveShots(list<Shot> &shotsList)
 		{
 			if (g_pScreen->GetObjectAt(it->GetNextX(), it->GetNextY()) == OBJECT_TYPE_SHOT)
 			{
-				Shot &s = this->GetShotAt(it->GetNextX(), it->GetNextY());
+				Shot *s = this->GetShotAt(it->GetNextX(), it->GetNextY());
 				
-				if (s.GetLastMove() == this->m_counter)
+				if (s->GetLastMove() == this->m_counter)
 				{
 					it++;
 					continue;
@@ -185,6 +218,24 @@ void GamePage::MoveShots(list<Shot> &shotsList)
 			temp->Clear();
 			shotsList.erase(temp);
 		}
+	}
+}
+
+void GamePage::RemoveNumber(int x, int y)
+{
+	int i = x;
+
+	while (i >= 1 && '0' <= g_pScreen->GetAt(i - 1, y) && g_pScreen->GetAt(i - 1, y) <= '9')
+		i--;
+
+	while (i < WIDTH && '0' <= g_pScreen->GetAt(i, y) && g_pScreen->GetAt(i, y) <= '9')
+	{
+		g_pScreen->SetAt(' ', i, y);
+
+		char buf[2] = { ' ', 0 };
+		g_pScreen->Print(buf, i, y, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_DEFAULT);
+
+		i++;
 	}
 }
 
@@ -238,6 +289,7 @@ void GamePage::RemoveObject(int x, int y)
 		break;
 
 	case OBJECT_TYPE_NUMBER:
+		this->RemoveNumber(x, y);
 		break;
 
 	case OBJECT_TYPE_SHOT:
@@ -248,15 +300,51 @@ void GamePage::RemoveObject(int x, int y)
 
 void GamePage::GenerateNumber()
 {
-	int x = rand() % WIDTH;
-	int y = 3 + rand() % (HEIGHT - 3);
-	int number = rand() % (10 + this->m_level);
+	int x = 0;
+	int y = 0;
+
+	int number = 1 + rand() % (10 + this->m_level);
 
 	char buf[255];
 	sprintf(buf, "%d", number);
+	int bufLen = strlen(buf);
 
-	g_pScreen->SetAt(buf[0], x, y);
-	g_pScreen->Print(buf, x, y, CONSOLE_COLOR_LIGHT_GREEN, CONSOLE_COLOR_GREEN);
+	for (int i = 0; i < 10; i++)
+	{
+		x = rand() % WIDTH;
+		y = 3 + rand() % (HEIGHT - 3);
+
+		if (x + bufLen > WIDTH)
+			continue;
+
+		bool b = false;
+
+		for (int j = -1; j <= bufLen; j++)
+		{
+			if (g_pScreen->GetAt(g_pScreen->NormalizeGameX(x + j), g_pScreen->NormalizeGameY(y - 1)) != ' ')
+				b = true;
+
+			if (g_pScreen->GetAt(g_pScreen->NormalizeGameX(x + j), g_pScreen->NormalizeGameY(y)) != ' ')
+				b = true;
+
+			if (g_pScreen->GetAt(g_pScreen->NormalizeGameX(x + j), g_pScreen->NormalizeGameY(y + 1)) != ' ')
+				b = true;
+
+			if (b)
+				break;
+		}
+
+		if (b)
+			continue;
+
+		
+		for (int j = 0; j < bufLen; j++)
+			g_pScreen->SetAt(buf[j], x + j, y);
+		
+		g_pScreen->Print(buf, x, y, CONSOLE_COLOR_LIGHT_GREEN, CONSOLE_COLOR_GREEN);
+
+		break;
+	}
 }
 
 void GamePage::HalfTick()
@@ -281,8 +369,25 @@ void GamePage::Tick()
 	if (!this->m_player2.IsKilled())
 		this->m_player2.Move();
 
-	if (!this->m_player1.IsKilled() && !move_player1) this->m_player1.Move();
-	if (!this->m_player2.IsKilled() && !move_player2) this->m_player2.Move();
+	if (!this->m_player1.IsKilled() && !move_player1)
+	{
+		if (g_pScreen->GetObjectAt(this->m_player1.GetNextX(), this->m_player1.GetNextY()) == OBJECT_TYPE_NUMBER)
+		{
+			int number = this->GetNumberAt(this->m_player1.GetNextX(), this->m_player1.GetNextY());
+
+			//if (this->m_exercise1.GetSolution() == number)
+
+			this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
+			this->m_player1.Kill();
+		}
+		else
+			this->m_player1.Move();
+	}
+
+	if (!this->m_player2.IsKilled() && !move_player2)
+	{
+		this->m_player2.Move();
+	}
 
 	if ((int)this->m_counter % ADD_SHOT_TIME == 0)
 	{
@@ -299,6 +404,6 @@ void GamePage::Tick()
 		}
 	}
 
-	/*if ((int)this->m_counter % GENERATE_NUMBER_TIME == 0)
-		this->GenerateNumber();*/
+	if ((int)this->m_counter % GENERATE_NUMBER_TIME == 0)
+		this->GenerateNumber();
 }

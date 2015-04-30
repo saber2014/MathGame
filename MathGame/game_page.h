@@ -4,6 +4,7 @@
 #include "common.h"
 #include "page.h"
 #include "player.h"
+#include "exercise.h"
 
 #define ADD_SHOT_TIME 200
 #define GENERATE_NUMBER_TIME 10
@@ -15,9 +16,11 @@ private:
 	float m_counter;
 	Player m_player1;
 	Player m_player2;
+	Exercise m_exercise1;
+	Exercise m_exercise2;
 
 public:
-	GamePage();
+	GamePage(int level);
 
 	char *GetName();
 	void Print();
@@ -25,9 +28,12 @@ public:
 
 	void PrintPlayerHeader(int player);
 	void PrintCounter();
+	void PrintExercises();
 	void PrintHeader();
-	Shot &GetShotAt(int x, int y);
+	int GetNumberAt(int x, int y);
+	Shot *GetShotAt(int x, int y);
 	void MoveShots(list<Shot> &shotsList);
+	void RemoveNumber(int x, int y);
 	void RemoveShot(int x, int y);
 	void RemoveObject(int x, int y);
 	void GenerateNumber();
