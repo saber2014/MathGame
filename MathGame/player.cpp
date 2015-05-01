@@ -104,3 +104,22 @@ void Player::Kill()
 	else
 		this->m_killed = true;
 }
+
+void Player::Reset()
+{
+	this->Clear();
+
+	this->m_x = this->m_defaultX;
+	this->m_y = this->m_defaultY;
+	this->m_direction = this->m_defaultDirection;
+
+	this->m_killed = false;
+	this->m_attempts = 3;
+	this->m_shots = 5;
+	this->m_shotsList.clear();
+}
+
+void Player::AddPoint()
+{
+	this->m_points++;
+}

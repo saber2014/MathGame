@@ -303,7 +303,16 @@ void GamePage::GenerateNumber()
 	int x = 0;
 	int y = 0;
 
-	int number = 1 + rand() % (10 + this->m_level);
+	int number = 0;
+
+	int temp = rand() % 3;
+
+	if (temp == 0)
+		number = 1 + rand() % (10 + this->m_level);
+	else if (temp == 1)
+		number = this->m_exercise1.GetSolution();
+	else
+		number = this->m_exercise2.GetSolution();
 
 	char buf[255];
 	sprintf(buf, "%d", number);
@@ -375,10 +384,20 @@ void GamePage::Tick()
 		{
 			int number = this->GetNumberAt(this->m_player1.GetNextX(), this->m_player1.GetNextY());
 
-			//if (this->m_exercise1.GetSolution() == number)
+			if (this->m_exercise1.GetSolution() == number)
+			{
+				this->m_level++;
 
-			this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
-			this->m_player1.Kill();
+				this->m_player1.AddPoint();
+				this->Reset();
+			}
+			else
+			{
+				this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
+				this->m_player1.Kill();
+
+				this->PrintPlayerHeader(1);
+			}
 		}
 		else
 			this->m_player1.Move();
@@ -386,7 +405,27 @@ void GamePage::Tick()
 
 	if (!this->m_player2.IsKilled() && !move_player2)
 	{
-		this->m_player2.Move();
+		if (g_pScreen->GetObjectAt(this->m_player2.GetNextX(), this->m_player2.GetNextY()) == OBJECT_TYPE_NUMBER)
+		{
+			int number = this->GetNumberAt(this->m_player2.GetNextX(), this->m_player2.GetNextY());
+
+			if (this->m_exercise2.GetSolution() == number)
+			{
+				this->m_level++;
+
+				this->m_player2.AddPoint();
+				this->Reset();
+			}
+			else
+			{
+				this->RemoveNumber(this->m_player2.GetNextX(), this->m_player2.GetNextY());
+				this->m_player2.Kill();
+
+				this->PrintPlayerHeader(2);
+			}
+		}
+		else
+			this->m_player2.Move();
 	}
 
 	if ((int)this->m_counter % ADD_SHOT_TIME == 0)
@@ -406,4 +445,40 @@ void GamePage::Tick()
 
 	if ((int)this->m_counter % GENERATE_NUMBER_TIME == 0)
 		this->GenerateNumber();
+}
+
+void GamePage::Reset()
+{
+	g_pScreen->Clear();
+	g_pConsole->Clear();
+
+	this->PlayTransition();
+
+	this->m_counter = 0;
+	this->m_player1.Reset();
+	this->m_player2.Reset();
+	this->m_exercise1.GenerateSimple(this->m_level);
+	this->m_exercise2.GenerateSimple(this->m_level);
+
+	this->Print();
+}
+
+void GamePage::PlayTransition()
+{
+	char temp1[WIDTH + 1] = { 0 };
+	char temp2[WIDTH + 1] = { 0 };
+
+	memset(temp1, ' ', WIDTH);
+	memset(temp2, '*', WIDTH);
+
+	for (int i = 0; i < HEIGHT; i++)
+	{
+		if (i - 1 >= 0)
+			g_pScreen->Print(temp1, 0, i - 1, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_DEFAULT);
+
+		g_pScreen->Print(temp2, 0, i, CONSOLE_COLOR_LIGHT_YELLOW, CONSOLE_COLOR_YELLOW);
+		g_pConsole->Wait(TRANSITION_WAIT_TIME);
+	}
+
+	g_pConsole->Clear();
 }

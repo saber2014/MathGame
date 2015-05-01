@@ -9,9 +9,10 @@ Shot::Shot(int x, int y, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR background
 
 void Shot::Move(float count)
 {
-	this->m_lastMove = count;
+	if (this->m_lastMove != count)
+		MovingObject::Move();
 
-	MovingObject::Move();
+	this->m_lastMove = count;
 }
 
 float Shot::GetLastMove()

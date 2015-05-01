@@ -31,7 +31,15 @@ void Exercise::GenerateSimple(int level)
 		this->m_number2 = min;
 
 		if (this->m_sign == EXERCISE_SIGN_MINUS)
+		{
+			if (max - min == 0)
+			{
+				this->m_number1++;
+				max++;
+			}
+
 			this->m_number3 = max - min;
+		}
 		else
 		{
 			if (max % min != 0)
@@ -51,7 +59,25 @@ string Exercise::GetExercise()
 	case EXERCISE_HIDE_NUMBER2:
 	{
 		char buf[255];
-		sprintf(buf, "%d + _ = %d", this->m_number1, this->m_number3);
+
+		switch (this->m_sign)
+		{
+		case EXERCISE_SIGN_PLUS:
+			sprintf(buf, "%d + _ = %d", this->m_number1, this->m_number3);
+			break;
+
+		case EXERCISE_SIGN_MINUS:
+			sprintf(buf, "%d - _ = %d", this->m_number1, this->m_number3);
+			break;
+
+		case EXERCISE_SIGN_MULTIPLICATION:
+			sprintf(buf, "%d * _ = %d", this->m_number1, this->m_number3);
+			break;
+
+		case EXERCISE_SIGN_DIVISION:
+			sprintf(buf, "%d / _ = %d", this->m_number1, this->m_number3);
+			break;
+		}
 
 		return buf;
 	}
@@ -60,7 +86,25 @@ string Exercise::GetExercise()
 	case EXERCISE_HIDE_NUMBER3:
 	{
 		char buf[255];
-		sprintf(buf, "%d + %d = _", this->m_number1, this->m_number2);
+
+		switch (this->m_sign)
+		{
+		case EXERCISE_SIGN_PLUS:
+			sprintf(buf, "%d + %d = _", this->m_number1, this->m_number2);
+			break;
+
+		case EXERCISE_SIGN_MINUS:
+			sprintf(buf, "%d - %d = _", this->m_number1, this->m_number2);
+			break;
+
+		case EXERCISE_SIGN_MULTIPLICATION:
+			sprintf(buf, "%d * %d = _", this->m_number1, this->m_number2);
+			break;
+
+		case EXERCISE_SIGN_DIVISION:
+			sprintf(buf, "%d / %d = _", this->m_number1, this->m_number2);
+			break;
+		}
 
 		return buf;
 	}

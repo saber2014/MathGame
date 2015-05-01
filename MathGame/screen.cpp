@@ -35,6 +35,9 @@ int Screen::NormalizeGameY(int nY)
 
 void Screen::Print(char *pszText, int nX, int nY, CONSOLE_COLOR foregroundColor, CONSOLE_COLOR backgroundColor)
 {
+	if (this->NormalizeX(nX) + strlen(pszText) >= WIDTH)
+		g_pConsole->EnableWrap(false);
+
 	g_pConsole->SetPosition(this->NormalizeX(nX), this->NormalizeY(nY));
 	g_pConsole->SetColor(foregroundColor, backgroundColor);
 
@@ -95,6 +98,9 @@ void Screen::PrintAligned(char *pszText, int align, CONSOLE_COLOR foregroundColo
 				startX = WIDTH - length;
 			else
 				startX = g_pConsole->GetXPosition();
+
+			if (this->NormalizeX(startX) + length >= WIDTH)
+				g_pConsole->EnableWrap(false);
 
 			g_pConsole->SetPosition(this->NormalizeX(startX), this->NormalizeY(startY++));
 			cout << temp;
@@ -204,4 +210,9 @@ OBJECT_TYPE Screen::GetObjectAt(int x, int y)
 		return OBJECT_TYPE_SHOT;
 
 	return OBJECT_TYPE_NONE;
+}
+
+void Screen::Clear()
+{
+	memset(this->m_ppScreen, ' ', sizeof(this->m_ppScreen));
 }

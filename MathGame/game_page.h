@@ -8,6 +8,7 @@
 
 #define ADD_SHOT_TIME 200
 #define GENERATE_NUMBER_TIME 10
+#define TRANSITION_WAIT_TIME 30
 
 class GamePage : public Page
 {
@@ -39,6 +40,8 @@ public:
 	void GenerateNumber();
 	void HalfTick();
 	void Tick();
+	void Reset();
+	void PlayTransition();
 };
 
 #endif

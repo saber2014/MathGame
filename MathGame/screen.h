@@ -55,6 +55,7 @@ public:
 	void PrintMessage(char *pszMessage, SCREEN_MESSAGE_STYLE style);
 	void PrintBottomMessage(char *pszMessage, SCREEN_MESSAGE_STYLE style);
 	OBJECT_TYPE GetObjectAt(int x, int y);
+	void Clear();
 };
 
 #endif

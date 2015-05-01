@@ -18,7 +18,6 @@ Manager::Manager()
 	g_pConsole->SetTitle("Math Game");
 	g_pConsole->ShowCursor(false);
 	g_pConsole->SetBufferSize(WIDTH, HEIGHT);
-	g_pConsole->EnableWrap(false);
 }
 
 Manager::~Manager()

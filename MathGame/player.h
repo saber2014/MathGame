@@ -29,6 +29,8 @@ public:
 	void AddShot();
 	bool Shoot(float count);
 	void Kill();
+	void Reset();
+	void AddPoint();
 };
 
 #endif
