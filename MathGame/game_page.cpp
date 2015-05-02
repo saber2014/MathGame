@@ -11,8 +11,16 @@ GamePage::GamePage(int level)
 
 	srand((unsigned int)time(NULL));
 
-	this->m_exercise1.GenerateSimple(this->m_level);
-	this->m_exercise2.GenerateSimple(this->m_level);
+	if (1 <= this->m_level && this->m_level <= 20)
+	{
+		this->m_exercise1.GenerateSimple(this->m_level);
+		this->m_exercise2.GenerateSimple(this->m_level);
+	}
+	else if (21 <= this->m_level && this->m_level <= 40)
+	{
+		this->m_exercise1.GenerateComplex();
+		this->m_exercise2.GenerateComplex();
+	}
 }
 
 char *GamePage::GetName()
@@ -113,6 +121,9 @@ void GamePage::PrintCounter()
 void GamePage::PrintExercises()
 {
 	g_pConsole->SetPosition(0, 2);
+
+	for (int i = 0; i < WIDTH; i++)
+		g_pScreen->Print(" ", i, 2, CONSOLE_COLOR_GRAY, CONSOLE_COLOR_GRAY);
 
 	g_pScreen->PrintAligned((char *)this->m_exercise1.GetExercise().c_str(), SCREEN_ALIGN_LEFT, CONSOLE_COLOR_LIGHT_YELLOW, CONSOLE_COLOR_GRAY);
 	g_pScreen->PrintAligned((char *)this->m_exercise2.GetExercise().c_str(), SCREEN_ALIGN_RIGHT, CONSOLE_COLOR_LIGHT_YELLOW, CONSOLE_COLOR_GRAY);
@@ -279,12 +290,12 @@ void GamePage::RemoveObject(int x, int y)
 	switch (ot)
 	{
 	case OBJECT_TYPE_PLAYER1:
-		this->m_player1.Kill();
+		this->Kill(1);
 		this->PrintPlayerHeader(1);
 		break;
 
 	case OBJECT_TYPE_PLAYER2:
-		this->m_player2.Kill();
+		this->Kill(2);
 		this->PrintPlayerHeader(2);
 		break;
 
@@ -305,14 +316,32 @@ void GamePage::GenerateNumber()
 
 	int number = 0;
 
-	int temp = rand() % 3;
+	if (this->m_exercise1.GetType() == EXERCISE_TYPE_COMPLEX && this->m_exercise2.GetType() == EXERCISE_TYPE_COMPLEX)
+	{
+		int temp = rand() % 5;
 
-	if (temp == 0)
-		number = 1 + rand() % (10 + this->m_level);
-	else if (temp == 1)
-		number = this->m_exercise1.GetSolution();
+		if (temp == 0)
+			number = 1 + rand() % (10 + EXERCISE_MAX_VALUE);
+		else if (temp == 1)
+			number = this->m_exercise1.GetSolution(1);
+		else if (temp == 2)
+			number = this->m_exercise1.GetSolution(2);
+		else if (temp == 3)
+			number = this->m_exercise2.GetSolution(1);
+		else
+			number = this->m_exercise2.GetSolution(2);
+	}
 	else
-		number = this->m_exercise2.GetSolution();
+	{
+		int temp = rand() % 3;
+
+		if (temp == 0)
+			number = 1 + rand() % (10 + this->m_level);
+		else if (temp == 1)
+			number = this->m_exercise1.GetSolution(1);
+		else
+			number = this->m_exercise2.GetSolution(1);
+	}
 
 	char buf[255];
 	sprintf(buf, "%d", number);
@@ -378,25 +407,50 @@ void GamePage::Tick()
 	if (!this->m_player2.IsKilled())
 		this->m_player2.Move();
 
+	bool reset = false;
+
 	if (!this->m_player1.IsKilled() && !move_player1)
 	{
 		if (g_pScreen->GetObjectAt(this->m_player1.GetNextX(), this->m_player1.GetNextY()) == OBJECT_TYPE_NUMBER)
 		{
 			int number = this->GetNumberAt(this->m_player1.GetNextX(), this->m_player1.GetNextY());
 
-			if (this->m_exercise1.GetSolution() == number)
+			if (this->m_exercise1.GetType() == EXERCISE_TYPE_COMPLEX)
 			{
-				this->m_level++;
+				if (!this->m_exercise1.IsPossibleSolution(number))
+				{
+					this->Kill(1);
+					this->PrintPlayerHeader(1);
+				}
+				else
+					this->PrintExercises();
 
-				this->m_player1.AddPoint();
-				this->Reset();
+				if (this->m_exercise1.IsSolved())
+				{
+					this->m_level++;
+					this->m_player1.AddPoint();
+
+					reset = true;
+				}
+				else
+					this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
 			}
 			else
 			{
-				this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
-				this->m_player1.Kill();
+				if (this->m_exercise1.GetSolution(1) == number)
+				{
+					this->m_level++;
+					this->m_player1.AddPoint();
 
-				this->PrintPlayerHeader(1);
+					reset = true;
+				}
+				else
+				{
+					this->Kill(1);
+					this->PrintPlayerHeader(1);
+
+					this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
+				}
 			}
 		}
 		else
@@ -409,24 +463,70 @@ void GamePage::Tick()
 		{
 			int number = this->GetNumberAt(this->m_player2.GetNextX(), this->m_player2.GetNextY());
 
-			if (this->m_exercise2.GetSolution() == number)
+			if (this->m_exercise2.GetType() == EXERCISE_TYPE_COMPLEX)
 			{
-				this->m_level++;
+				if (!this->m_exercise2.IsPossibleSolution(number))
+				{
+					this->Kill(2);
+					this->PrintPlayerHeader(2);
+				}
+				else
+					this->PrintExercises();
 
-				this->m_player2.AddPoint();
-				this->Reset();
+				if (this->m_exercise2.IsSolved())
+				{
+					this->m_level++;
+					this->m_player2.AddPoint();
+
+					reset = true;
+				}
+				else
+					this->RemoveNumber(this->m_player2.GetNextX(), this->m_player2.GetNextY());
 			}
 			else
 			{
-				this->RemoveNumber(this->m_player2.GetNextX(), this->m_player2.GetNextY());
-				this->m_player2.Kill();
+				if (this->m_exercise2.GetSolution(1) == number)
+				{
+					this->m_level++;
+					this->m_player2.AddPoint();
 
-				this->PrintPlayerHeader(2);
+					reset = true;
+				}
+				else
+				{
+					this->Kill(2);
+					this->PrintPlayerHeader(2);
+
+					this->RemoveNumber(this->m_player2.GetNextX(), this->m_player2.GetNextY());
+				}
 			}
 		}
 		else
 			this->m_player2.Move();
 	}
+
+	if (this->m_player1.IsKilled() && this->m_player2.IsKilled())
+	{
+		reset = true;
+
+		g_pScreen->PrintMessage("BOTH PLAYERS ARE KILLED.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
+		g_pConsole->Wait(MESSAGE_WAIT_TIME);
+
+		this->m_level++;
+	}
+
+	if ((int)this->m_counter == TIME_IS_OVER_TIME)
+	{
+		reset = true;
+
+		g_pScreen->PrintMessage("TIME IS OVER.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
+		g_pConsole->Wait(MESSAGE_WAIT_TIME);
+
+		this->m_level++;
+	}
+
+	if (reset)
+		this->Reset();
 
 	if ((int)this->m_counter % ADD_SHOT_TIME == 0)
 	{
@@ -450,15 +550,23 @@ void GamePage::Tick()
 void GamePage::Reset()
 {
 	g_pScreen->Clear();
-	g_pConsole->Clear();
 
 	this->PlayTransition();
 
 	this->m_counter = 0;
 	this->m_player1.Reset();
 	this->m_player2.Reset();
-	this->m_exercise1.GenerateSimple(this->m_level);
-	this->m_exercise2.GenerateSimple(this->m_level);
+
+	if (1 <= this->m_level && this->m_level <= 20)
+	{
+		this->m_exercise1.GenerateSimple(this->m_level);
+		this->m_exercise2.GenerateSimple(this->m_level);
+	}
+	else if (21 <= this->m_level && this->m_level <= 40)
+	{
+		this->m_exercise1.GenerateComplex();
+		this->m_exercise2.GenerateComplex();
+	}
 
 	this->Print();
 }
@@ -481,4 +589,24 @@ void GamePage::PlayTransition()
 	}
 
 	g_pConsole->Clear();
+}
+
+void GamePage::Kill(int player)
+{
+	switch (player)
+	{
+	case 1:
+		if (g_pScreen->GetObjectAt(10, 9) == OBJECT_TYPE_NUMBER)
+			this->RemoveNumber(10, 9);
+
+		this->m_player1.Kill();
+		break;
+
+	case 2:
+		if (g_pScreen->GetObjectAt(70, 9) == OBJECT_TYPE_NUMBER)
+			this->RemoveNumber(70, 9);
+
+		this->m_player2.Kill();
+		break;
+	}
 }

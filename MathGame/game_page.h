@@ -6,8 +6,10 @@
 #include "player.h"
 #include "exercise.h"
 
+#define TIME_IS_OVER_TIME 1500
 #define ADD_SHOT_TIME 200
 #define GENERATE_NUMBER_TIME 10
+#define MESSAGE_WAIT_TIME 2000
 #define TRANSITION_WAIT_TIME 30
 
 class GamePage : public Page
@@ -42,6 +44,7 @@ public:
 	void Tick();
 	void Reset();
 	void PlayTransition();
+	void Kill(int player);
 };
 
 #endif

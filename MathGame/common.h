@@ -9,8 +9,9 @@
 #include <time.h>
 
 #include <iostream>
-#include <list>
 #include <string>
+#include <vector>
+#include <list>
 using namespace std;
 
 #define	WIDTH 80
@@ -28,5 +29,6 @@ extern enum SCREEN_MESSAGE_STYLE;
 
 CONSOLE_COLOR GetStylizedForeground(SCREEN_MESSAGE_STYLE style);
 CONSOLE_COLOR GetStylizedBackground(SCREEN_MESSAGE_STYLE style);
+void OutputDebugMessage(char *message);
 
 #endif

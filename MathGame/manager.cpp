@@ -18,6 +18,8 @@ Manager::Manager()
 	g_pConsole->SetTitle("Math Game");
 	g_pConsole->ShowCursor(false);
 	g_pConsole->SetBufferSize(WIDTH, HEIGHT);
+
+	Exercise::InitLookupTable();
 }
 
 Manager::~Manager()

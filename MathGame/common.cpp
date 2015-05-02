@@ -80,3 +80,8 @@ CONSOLE_COLOR GetStylizedBackground(SCREEN_MESSAGE_STYLE style)
 
 	return backgroundColor;
 }
+
+void OutputDebugMessage(char *message)
+{
+	OutputDebugStringA(message);
+}
