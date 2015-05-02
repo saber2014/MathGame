@@ -19,6 +19,7 @@ using namespace std;
 
 #define WAIT_TIME 100
 #define GAME_WAIT_TIME 200
+#define MESSAGE_WAIT_TIME 2000
 
 extern class Console *g_pConsole;
 extern class Screen *g_pScreen;

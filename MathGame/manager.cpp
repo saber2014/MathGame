@@ -10,6 +10,7 @@
 Manager::Manager()
 {
 	this->m_pCurrentPage = NULL;
+	this->m_gameOver = false;
 
 	g_pConsole = new Console();
 	g_pScreen = new Screen();
@@ -99,7 +100,18 @@ void Manager::Run()
 					StartGameLevelPage *pStartGameLevelPage = dynamic_cast<StartGameLevelPage *>(this->m_pCurrentPage);
 					int levelNumber = pStartGameLevelPage->GetLevelNumber();
 
-					this->SwitchPage(new GamePage(levelNumber));
+					if (levelNumber < 1 || levelNumber > 40)
+					{
+						g_pConsole->ShowCursor(false);
+						g_pScreen->PrintMessage("INCORRECT LEVEL NUMBER!\nPLEASE TRY AGAIN.", SCREEN_MESSAGE_STYLE_RED);
+						g_pConsole->Wait(MESSAGE_WAIT_TIME);
+
+						g_pConsole->Clear();
+						pStartGameLevelPage->Print();
+						g_pConsole->ShowCursor(true);
+					}
+					else
+						this->SwitchPage(new GamePage(levelNumber));
 				}
 			}
 			else
@@ -123,16 +135,35 @@ void Manager::Run()
 
 		if (!strcmp(this->m_pCurrentPage->GetName(), "Game"))
 		{
-			GamePage *pGamePage = dynamic_cast<GamePage *>(this->m_pCurrentPage);
+			if (this->m_gameOver)
+			{
+				this->m_gameOver = false;
 
-			pGamePage->HalfTick();
-			pGamePage->Tick();
+				this->SwitchPage(new MainMenuPage());
+			}
+			else
+			{
+				GamePage *pGamePage = dynamic_cast<GamePage *>(this->m_pCurrentPage);
 
-			g_pConsole->Wait(GAME_WAIT_TIME / 2);
+				pGamePage->HalfTick();
+				pGamePage->Tick(this);
 
-			pGamePage->HalfTick();
+				g_pConsole->Wait(GAME_WAIT_TIME / 2);
 
-			g_pConsole->Wait(GAME_WAIT_TIME / 2);
+				pGamePage->HalfTick();
+
+				g_pConsole->Wait(GAME_WAIT_TIME / 2);
+			}
 		}
+	}
+}
+
+void Manager::Callback(MANAGER_CALLBACK value)
+{
+	switch (value)
+	{
+	case MANAGER_CALLBACK_GAME_OVER:
+		this->m_gameOver = true;
+		break;
 	}
 }

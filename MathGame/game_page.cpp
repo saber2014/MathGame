@@ -1,5 +1,6 @@
 #include "game_page.h"
 #include "screen.h"
+#include "manager.h"
 
 GamePage::GamePage(int level)
 	:
@@ -393,7 +394,7 @@ void GamePage::HalfTick()
 	this->m_counter += 0.5;
 }
 
-void GamePage::Tick()
+void GamePage::Tick(Manager *pManager)
 {
 	this->PrintCounter();
 
@@ -417,6 +418,8 @@ void GamePage::Tick()
 
 			if (this->m_exercise1.GetType() == EXERCISE_TYPE_COMPLEX)
 			{
+				this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
+
 				if (!this->m_exercise1.IsPossibleSolution(number))
 				{
 					this->Kill(1);
@@ -432,8 +435,6 @@ void GamePage::Tick()
 
 					reset = true;
 				}
-				else
-					this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
 			}
 			else
 			{
@@ -446,10 +447,10 @@ void GamePage::Tick()
 				}
 				else
 				{
+					this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
+
 					this->Kill(1);
 					this->PrintPlayerHeader(1);
-
-					this->RemoveNumber(this->m_player1.GetNextX(), this->m_player1.GetNextY());
 				}
 			}
 		}
@@ -465,6 +466,8 @@ void GamePage::Tick()
 
 			if (this->m_exercise2.GetType() == EXERCISE_TYPE_COMPLEX)
 			{
+				this->RemoveNumber(this->m_player2.GetNextX(), this->m_player2.GetNextY());
+
 				if (!this->m_exercise2.IsPossibleSolution(number))
 				{
 					this->Kill(2);
@@ -480,8 +483,6 @@ void GamePage::Tick()
 
 					reset = true;
 				}
-				else
-					this->RemoveNumber(this->m_player2.GetNextX(), this->m_player2.GetNextY());
 			}
 			else
 			{
@@ -494,10 +495,10 @@ void GamePage::Tick()
 				}
 				else
 				{
+					this->RemoveNumber(this->m_player2.GetNextX(), this->m_player2.GetNextY());
+
 					this->Kill(2);
 					this->PrintPlayerHeader(2);
-
-					this->RemoveNumber(this->m_player2.GetNextX(), this->m_player2.GetNextY());
 				}
 			}
 		}
@@ -509,8 +510,11 @@ void GamePage::Tick()
 	{
 		reset = true;
 
-		g_pScreen->PrintMessage("BOTH PLAYERS ARE KILLED.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
-		g_pConsole->Wait(MESSAGE_WAIT_TIME);
+		if (this->m_level < 40)
+		{
+			g_pScreen->PrintMessage("BOTH PLAYERS ARE KILLED.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
+			g_pConsole->Wait(MESSAGE_WAIT_TIME);
+		}
 
 		this->m_level++;
 	}
@@ -519,14 +523,17 @@ void GamePage::Tick()
 	{
 		reset = true;
 
-		g_pScreen->PrintMessage("TIME IS OVER.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
-		g_pConsole->Wait(MESSAGE_WAIT_TIME);
+		if (this->m_level < 40)
+		{
+			g_pScreen->PrintMessage("TIME IS OVER.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
+			g_pConsole->Wait(MESSAGE_WAIT_TIME);
+		}
 
 		this->m_level++;
 	}
 
 	if (reset)
-		this->Reset();
+		this->Reset(pManager);
 
 	if ((int)this->m_counter % ADD_SHOT_TIME == 0)
 	{
@@ -547,9 +554,19 @@ void GamePage::Tick()
 		this->GenerateNumber();
 }
 
-void GamePage::Reset()
+void GamePage::Reset(Manager *pManager)
 {
 	g_pScreen->Clear();
+
+	if (this->m_level > 40)
+	{
+		g_pScreen->PrintMessage("CONGRATULATIONS! YOU COMPLETED THE GAME.", SCREEN_MESSAGE_STYLE_RED);
+		g_pConsole->Wait(MESSAGE_WAIT_TIME);
+
+		pManager->Callback(MANAGER_CALLBACK_GAME_OVER);
+
+		return;
+	}
 
 	this->PlayTransition();
 
@@ -579,12 +596,16 @@ void GamePage::PlayTransition()
 	memset(temp1, ' ', WIDTH);
 	memset(temp2, '*', WIDTH);
 
+	int r = rand() % (SCREEN_MESSAGE_STYLE_YELLOW + 1);
+	CONSOLE_COLOR clr1 = GetStylizedForeground((SCREEN_MESSAGE_STYLE)r);
+	CONSOLE_COLOR clr2 = GetStylizedBackground((SCREEN_MESSAGE_STYLE)r);
+
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		if (i - 1 >= 0)
 			g_pScreen->Print(temp1, 0, i - 1, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_DEFAULT);
 
-		g_pScreen->Print(temp2, 0, i, CONSOLE_COLOR_LIGHT_YELLOW, CONSOLE_COLOR_YELLOW);
+		g_pScreen->Print(temp2, 0, i, clr1, clr2);
 		g_pConsole->Wait(TRANSITION_WAIT_TIME);
 	}
 

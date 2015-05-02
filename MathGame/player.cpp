@@ -46,7 +46,7 @@ void Player::AddShot()
 
 bool Player::Shoot(float count)
 {
-	if (this->m_shots > 0)
+	if (!this->m_killed && this->m_shots > 0)
 	{
 		this->m_shots--;
 

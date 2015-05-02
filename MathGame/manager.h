@@ -3,12 +3,19 @@
 
 #include "common.h"
 
+enum MANAGER_CALLBACK
+{
+	MANAGER_CALLBACK_DEFAULT = 0,
+	MANAGER_CALLBACK_GAME_OVER
+};
+
 class Page;
 
 class Manager
 {
 private:
 	Page *m_pCurrentPage;
+	bool m_gameOver;
 
 public:
 	Manager();
@@ -16,6 +23,7 @@ public:
 
 	void SwitchPage(Page *pNewPage);
 	void Run();
+	void Callback(MANAGER_CALLBACK value);
 };
 
 #endif
