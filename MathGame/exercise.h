@@ -2,6 +2,7 @@
 #define EXERCISE_H
 
 #include "common.h"
+#include "compressed_vector.h"
 
 #define EXERCISE_MIN_VALUE 1
 #define EXERCISE_MAX_VALUE 21
@@ -52,7 +53,7 @@ private:
 	EXERCISE_HIDE m_hide1;
 	EXERCISE_HIDE m_hide2;
 
-	static vector<ExerciseTriplet> m_lookupTable[EXERCISE_SIGN_DIVISION][EXERCISE_SIGN_DIVISION];
+	static CompressedVector m_lookupTable[EXERCISE_SIGN_DIVISION][EXERCISE_SIGN_DIVISION];
 
 public:
 	Exercise();
