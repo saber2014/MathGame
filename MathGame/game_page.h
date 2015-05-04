@@ -6,6 +6,8 @@
 #include "player.h"
 #include "exercise.h"
 #include "numbers_eater.h"
+#include "row_flyer.h"
+#include "column_flyer.h"
 
 #define TIME_IS_OVER_TIME 1500
 #define ADD_SHOT_TIME 200
@@ -33,6 +35,10 @@ private:
 	Exercise m_exercise2;
 	NumbersEater m_numbersEater1;
 	NumbersEater m_numbersEater2;
+	RowFlyer m_rowFlyer1;
+	RowFlyer m_rowFlyer2;
+	ColumnFlyer m_columnFlyer1;
+	ColumnFlyer m_columnFlyer2;
 	vector<GamePageNumber> m_numbers;
 
 public:
@@ -51,6 +57,7 @@ public:
 	void MoveShots(list<Shot> &shotsList);
 	void RemoveNumber(int x, int y);
 	void RemoveShot(int x, int y);
+	void RemoveNumbersEater(int x, int y);
 	void RemoveObject(int x, int y);
 	void GenerateNumber();
 	void HalfTick();
