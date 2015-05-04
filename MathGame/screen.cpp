@@ -218,3 +218,20 @@ void Screen::Clear()
 {
 	memset(this->m_ppScreen, ' ', sizeof(this->m_ppScreen));
 }
+
+void Screen::PrintScreenWithNumbers()
+{
+	for (int y = 0; y < HEIGHT; y++)
+	{
+		for (int x = 0; x < WIDTH; x++)
+		{
+			if ('0' <= this->m_ppScreen[y][x] && this->m_ppScreen[y][x] <= '9')
+			{
+				g_pConsole->SetPosition(x, y);
+				g_pConsole->SetColor(CONSOLE_COLOR_LIGHT_GREEN, CONSOLE_COLOR_GREEN);
+
+				cout << this->m_ppScreen[y][x];
+			}
+		}
+	}
+}

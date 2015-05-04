@@ -28,6 +28,8 @@ GamePage::GamePage(int level)
 		this->m_exercise1.GenerateComplex();
 		this->m_exercise2.GenerateComplex();
 	}
+
+	g_pScreen->Clear();
 }
 
 char *GamePage::GetName()
@@ -39,11 +41,11 @@ void GamePage::Print()
 {
 	this->PrintHeader();
 
-	this->m_player1.Print();
-	this->m_player2.Print();
+	if (!this->m_player1.IsKilled()) this->m_player1.Print();
+	if (!this->m_player2.IsKilled()) this->m_player2.Print();
 
-	this->m_numbersEater1.Print();
-	this->m_numbersEater2.Print();
+	if (!this->m_numbersEater1.IsKilled()) this->m_numbersEater1.Print();
+	if (!this->m_numbersEater2.IsKilled()) this->m_numbersEater2.Print();
 
 	this->m_rowFlyer1.Print();
 	this->m_rowFlyer2.Print();
@@ -169,6 +171,27 @@ void GamePage::PrintHeader()
 	this->PrintExercises();
 }
 
+int GamePage::GetLevel()
+{
+	return this->m_level;
+}
+
+int GamePage::GetPlayerPoints(int player)
+{
+	switch (player)
+	{
+	case 1:
+		return this->m_player1.GetPoints();
+		break;
+
+	case 2:
+		return this->m_player2.GetPoints();
+		break;
+	}
+	
+	return 0;
+}
+
 int GamePage::GetNumberAt(int x, int y)
 {
 	int ret = 0;
@@ -211,6 +234,20 @@ Shot *GamePage::GetShotAt(int x, int y)
 	}
 
 	return NULL;
+}
+
+void GamePage::SetPlayerPoints(int player, int points)
+{
+	switch (player)
+	{
+	case 1:
+		this->m_player1.SetPoints(points);
+		break;
+
+	case 2:
+		this->m_player2.SetPoints(points);
+		break;
+	}
 }
 
 void GamePage::MoveShots(list<Shot> &shotsList)
@@ -687,6 +724,8 @@ void GamePage::Reset(Manager *pManager)
 
 	this->m_columnFlyer1.Reset();
 	this->m_columnFlyer2.Reset();
+
+	this->m_numbers.clear();
 
 	if (1 <= this->m_level && this->m_level <= 20)
 	{

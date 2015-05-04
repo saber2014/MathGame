@@ -69,6 +69,9 @@
     <ClInclude Include="column_flyer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pause_menu_page.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="console.cpp">
@@ -126,6 +129,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="column_flyer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pause_menu_page.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

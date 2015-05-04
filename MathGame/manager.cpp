@@ -6,11 +6,14 @@
 #include "instructions_page.h"
 #include "game_page.h"
 #include "start_game_level_page.h"
+#include "pause_menu_page.h"
 
 Manager::Manager()
 {
 	this->m_pCurrentPage = NULL;
 	this->m_gameOver = false;
+
+	this->m_savedGamePage = NULL;
 
 	g_pConsole = new Console();
 	g_pScreen = new Screen();
@@ -27,6 +30,9 @@ Manager::~Manager()
 {
 	if (this->m_pCurrentPage)
 		delete this->m_pCurrentPage;
+
+	if (this->m_savedGamePage)
+		delete this->m_savedGamePage;
 
 	g_pConsole->Clear();
 
@@ -69,6 +75,21 @@ void Manager::Run()
 					this->SwitchPage(new MainMenuPage());
 				else if (!strcmp(this->m_pCurrentPage->GetName(), "Start Game Level"))
 					this->SwitchPage(new MainMenuPage());
+				else if (!strcmp(this->m_pCurrentPage->GetName(), "Game"))
+				{
+					this->m_savedGamePage = new GamePage(*dynamic_cast<GamePage *>(this->m_pCurrentPage));
+					this->SwitchPage(new PauseMenuPage());
+				}
+				else if (!strcmp(this->m_pCurrentPage->GetName(), "Pause Menu"))
+				{
+					g_pConsole->Clear();
+					g_pScreen->PrintScreenWithNumbers();
+
+					this->SwitchPage(new GamePage(*this->m_savedGamePage));
+
+					delete this->m_savedGamePage;
+					this->m_savedGamePage = NULL;
+				}
 			}
 			else if (*it == KEY_ENTER)
 			{
@@ -113,12 +134,63 @@ void Manager::Run()
 					else
 						this->SwitchPage(new GamePage(levelNumber));
 				}
+				else if (!strcmp(this->m_pCurrentPage->GetName(), "Pause Menu"))
+				{
+					PauseMenuPage *pPauseMenuPage = dynamic_cast<PauseMenuPage *>(this->m_pCurrentPage);
+
+					switch (pPauseMenuPage->GetSelectedItem())
+					{
+					case PAUSE_MENU_ITEM_EXIT:
+						run = false;
+						break;
+
+					case PAUSE_MENU_ITEM_BACK_MAIN_MENU:
+						this->SwitchPage(new MainMenuPage());
+						break;
+
+					case PAUSE_MENU_ITEM_CONTINUE_PLAY:
+						g_pConsole->Clear();
+						g_pScreen->PrintScreenWithNumbers();
+						
+						this->SwitchPage(new GamePage(*this->m_savedGamePage));
+						break;
+
+					case PAUSE_MENU_ITEM_RESTART:
+						this->SwitchPage(new GamePage(this->m_savedGamePage->GetLevel()));
+						
+						dynamic_cast<GamePage *>(this->m_pCurrentPage)->SetPlayerPoints(1, this->m_savedGamePage->GetPlayerPoints(1));
+						dynamic_cast<GamePage *>(this->m_pCurrentPage)->SetPlayerPoints(2, this->m_savedGamePage->GetPlayerPoints(2));
+						dynamic_cast<GamePage *>(this->m_pCurrentPage)->PrintHeader();
+						break;
+
+					case PAUSE_MENU_ITEM_NEXT:
+						if (this->m_savedGamePage->GetLevel() + 1 > 40)
+						{
+							g_pScreen->PrintMessage("CONGRATULATIONS! YOU COMPLETED THE GAME.", SCREEN_MESSAGE_STYLE_RED);
+							g_pConsole->Wait(MESSAGE_WAIT_TIME);
+
+							this->SwitchPage(new MainMenuPage());
+						}
+						else
+						{
+							this->SwitchPage(new GamePage(this->m_savedGamePage->GetLevel() + 1));
+							
+							dynamic_cast<GamePage *>(this->m_pCurrentPage)->SetPlayerPoints(1, this->m_savedGamePage->GetPlayerPoints(1));
+							dynamic_cast<GamePage *>(this->m_pCurrentPage)->SetPlayerPoints(2, this->m_savedGamePage->GetPlayerPoints(2));
+							dynamic_cast<GamePage *>(this->m_pCurrentPage)->PrintHeader();
+						}
+						break;
+					}
+
+					delete this->m_savedGamePage;
+					this->m_savedGamePage = NULL;
+				}
 			}
 			else
 			{
 				this->m_pCurrentPage->KeyEvent(*it);
 
-				if (!strcmp(this->m_pCurrentPage->GetName(), "Main Menu"))
+				if (!strcmp(this->m_pCurrentPage->GetName(), "Main Menu") || !strcmp(this->m_pCurrentPage->GetName(), "Pause Menu"))
 				{
 					g_pConsole->Wait(WAIT_TIME);
 

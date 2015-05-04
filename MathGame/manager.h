@@ -10,12 +10,15 @@ enum MANAGER_CALLBACK
 };
 
 class Page;
+class GamePage;
 
 class Manager
 {
 private:
 	Page *m_pCurrentPage;
 	bool m_gameOver;
+
+	GamePage *m_savedGamePage;
 
 public:
 	Manager();

@@ -39,6 +39,11 @@ list<Shot> &Player::GetShotsList()
 	return this->m_shotsList;
 }
 
+void Player::SetPoints(int points)
+{
+	this->m_points = points;
+}
+
 void Player::AddShot()
 {
 	this->m_shots++;

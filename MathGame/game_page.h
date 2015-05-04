@@ -52,8 +52,11 @@ public:
 	void PrintCounter();
 	void PrintExercises();
 	void PrintHeader();
+	int GetLevel();
+	int GetPlayerPoints(int player);
 	int GetNumberAt(int x, int y);
 	Shot *GetShotAt(int x, int y);
+	void SetPlayerPoints(int player, int points);
 	void MoveShots(list<Shot> &shotsList);
 	void RemoveNumber(int x, int y);
 	void RemoveShot(int x, int y);

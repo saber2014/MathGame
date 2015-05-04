@@ -89,6 +89,7 @@
     <ClInclude Include="moving_object.h" />
     <ClInclude Include="numbers_eater.h" />
     <ClInclude Include="page.h" />
+    <ClInclude Include="pause_menu_page.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="row_flyer.h" />
     <ClInclude Include="screen.h" />
@@ -110,6 +111,7 @@
     <ClCompile Include="moving_object.cpp" />
     <ClCompile Include="numbers_eater.cpp" />
     <ClCompile Include="page.cpp" />
+    <ClCompile Include="pause_menu_page.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="row_flyer.cpp" />
     <ClCompile Include="screen.cpp" />

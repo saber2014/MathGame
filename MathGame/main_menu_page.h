@@ -4,7 +4,7 @@
 #include "common.h"
 #include "page.h"
 
-enum MAIN_MENU_ITEMS
+enum MAIN_MENU_ITEM
 {
 	MAIN_MENU_ITEM_INSTRUCTIONS = 0,
 	MAIN_MENU_ITEM_START_GAME,
