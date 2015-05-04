@@ -33,13 +33,6 @@ enum EXERCISE_HIDE
 	EXERCISE_HIDE_NUMBER4
 };
 
-struct ExerciseTriplet
-{
-	unsigned __int8 number1;
-	unsigned __int8 number2;
-	unsigned __int8 number3;
-};
-
 class Exercise
 {
 private:

@@ -60,6 +60,9 @@
     <ClInclude Include="compressed_vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="numbers_eater.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="console.cpp">
@@ -108,6 +111,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="compressed_vector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="numbers_eater.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

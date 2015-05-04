@@ -208,6 +208,8 @@ OBJECT_TYPE Screen::GetObjectAt(int x, int y)
 		return OBJECT_TYPE_NUMBER;
 	else if (ch == '*')
 		return OBJECT_TYPE_SHOT;
+	else if (ch == '%')
+		return OBJECT_TYPE_NUMBERS_EATER;
 
 	return OBJECT_TYPE_NONE;
 }

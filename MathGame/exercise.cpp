@@ -143,16 +143,9 @@ void Exercise::GenerateComplex()
 
 	int r = rand() % ((Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].GetLength()) / 3);
 
-	ExerciseTriplet triplet =
-	{
-		Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(3 * r),
-		Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(3 * r + 1),
-		Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(3 * r + 2)
-	};
-
-	this->m_number1 = triplet.number1;
-	this->m_number2 = triplet.number2;
-	this->m_number3 = triplet.number3;
+	this->m_number1 = Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(3 * r);
+	this->m_number2 = Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(3 * r + 1);
+	this->m_number3 = Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(3 * r + 2);
 
 	this->m_number4 = Exercise::Calculate(this->m_number1, this->m_number2, this->m_number3, this->m_sign1, this->m_sign2);
 
@@ -363,27 +356,24 @@ bool Exercise::IsPossibleSolution(int number)
 
 	for (int i = 0; i < Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].GetLength(); i += 3)
 	{
-		ExerciseTriplet et =
-		{
-			Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(i),
-			Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(i + 1),
-			Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(i + 2)
-		};
+		int num1 = Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(i);
+		int num2 = Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(i + 1);
+		int num3 = Exercise::m_lookupTable[this->m_sign1 - 1][this->m_sign2 - 1].Get(i + 2);
 
-		int res = Exercise::Calculate(et.number1, et.number2, et.number3, this->m_sign1, this->m_sign2);
+		int res = Exercise::Calculate(num1, num2, num3, this->m_sign1, this->m_sign2);
 
 		bool b1 = false, b2 = false, b3 = false, b4 = false;
 
-		if (arr[0] == 0 || arr[0] == et.number1) b1 = true;
-		if (arr[1] == 0 || arr[1] == et.number2) b2 = true;
-		if (arr[2] == 0 || arr[2] == et.number3) b3 = true;
+		if (arr[0] == 0 || arr[0] == num1) b1 = true;
+		if (arr[1] == 0 || arr[1] == num2) b2 = true;
+		if (arr[2] == 0 || arr[2] == num3) b3 = true;
 		if (arr[3] == 0 || arr[3] == res) b4 = true;
 
 		if (b1 && b2 && b3 && b4)
 		{
-			this->m_number1 = et.number1;
-			this->m_number2 = et.number2;
-			this->m_number3 = et.number3;
+			this->m_number1 = num1;
+			this->m_number2 = num2;
+			this->m_number3 = num3;
 			this->m_number4 = res;
 
 			if (this->m_hide1 != EXERCISE_HIDE_DEFAULT && this->m_hide2 != EXERCISE_HIDE_DEFAULT)

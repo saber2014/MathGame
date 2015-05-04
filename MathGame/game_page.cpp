@@ -5,7 +5,9 @@
 GamePage::GamePage(int level)
 	:
 	m_player1(10, 9, '#', CONSOLE_COLOR_LIGHT_PURPLE, CONSOLE_COLOR_DEFAULT, OBJECT_MOVE_RIGHT, CONSOLE_COLOR_PURPLE),
-	m_player2(70, 9, '@', CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_DEFAULT, OBJECT_MOVE_LEFT, CONSOLE_COLOR_AQUA)
+	m_player2(70, 9, '@', CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_DEFAULT, OBJECT_MOVE_LEFT, CONSOLE_COLOR_AQUA),
+	m_numbersEater1(10, 19, '%', CONSOLE_COLOR_YELLOW, CONSOLE_COLOR_LIGHT_YELLOW, OBJECT_MOVE_DEFAULT),
+	m_numbersEater2(70, 19, '%', CONSOLE_COLOR_YELLOW, CONSOLE_COLOR_LIGHT_YELLOW, OBJECT_MOVE_DEFAULT)
 {
 	this->m_level = level;
 	this->m_counter = 0;
@@ -35,6 +37,9 @@ void GamePage::Print()
 
 	this->m_player1.Print();
 	this->m_player2.Print();
+
+	this->m_numbersEater1.Print();
+	this->m_numbersEater2.Print();
 }
 
 void GamePage::KeyEvent(char key)
@@ -240,6 +245,15 @@ void GamePage::RemoveNumber(int x, int y)
 	while (i >= 1 && '0' <= g_pScreen->GetAt(i - 1, y) && g_pScreen->GetAt(i - 1, y) <= '9')
 		i--;
 
+	for (vector<GamePageNumber>::iterator it = this->m_numbers.begin(); it != this->m_numbers.end(); it++)
+	{
+		if (it->x == i && it->y == y)
+		{
+			this->m_numbers.erase(it);
+			break;
+		}
+	}
+
 	while (i < WIDTH && '0' <= g_pScreen->GetAt(i, y) && g_pScreen->GetAt(i, y) <= '9')
 	{
 		g_pScreen->SetAt(' ', i, y);
@@ -376,11 +390,13 @@ void GamePage::GenerateNumber()
 		if (b)
 			continue;
 
-		
 		for (int j = 0; j < bufLen; j++)
 			g_pScreen->SetAt(buf[j], x + j, y);
 		
 		g_pScreen->Print(buf, x, y, CONSOLE_COLOR_LIGHT_GREEN, CONSOLE_COLOR_GREEN);
+
+		GamePageNumber gpn = { x, y, number };
+		this->m_numbers.push_back(gpn);
 
 		break;
 	}
@@ -390,6 +406,52 @@ void GamePage::HalfTick()
 {
 	this->MoveShots(this->m_player1.GetShotsList());
 	this->MoveShots(this->m_player2.GetShotsList());
+
+	if (!this->m_numbersEater1.IsKilled())
+	{
+		if (!this->m_numbersEater1.IsPossibleToMove())
+		{
+			OBJECT_TYPE ot = g_pScreen->GetObjectAt(this->m_numbersEater1.GetNextX(), this->m_numbersEater1.GetNextY());
+
+			if (ot == OBJECT_TYPE_NUMBER)
+				this->RemoveNumber(this->m_numbersEater1.GetNextX(), this->m_numbersEater1.GetNextY());
+			else if (ot == OBJECT_TYPE_NUMBERS_EATER)
+			{
+				m_numbersEater1.Kill();
+				m_numbersEater2.Kill();
+			}
+			else
+			{
+				if (ot != OBJECT_TYPE_SHOT)
+					m_numbersEater1.Kill();
+			}
+		}
+		else
+			this->m_numbersEater1.Move(this->m_numbers);
+	}
+
+	if (!this->m_numbersEater2.IsKilled())
+	{
+		if (!this->m_numbersEater2.IsPossibleToMove())
+		{
+			OBJECT_TYPE ot = g_pScreen->GetObjectAt(this->m_numbersEater2.GetNextX(), this->m_numbersEater2.GetNextY());
+
+			if (ot == OBJECT_TYPE_NUMBER)
+				this->RemoveNumber(this->m_numbersEater2.GetNextX(), this->m_numbersEater2.GetNextY());
+			else if (ot == OBJECT_TYPE_NUMBERS_EATER)
+			{
+				m_numbersEater1.Kill();
+				m_numbersEater2.Kill();
+			}
+			else
+			{
+				if (ot != OBJECT_TYPE_SHOT)
+					this->m_numbersEater2.Kill();
+			}
+		}
+		else
+			this->m_numbersEater2.Move(this->m_numbers);
+	}
 
 	this->m_counter += 0.5;
 }
@@ -573,6 +635,9 @@ void GamePage::Reset(Manager *pManager)
 	this->m_counter = 0;
 	this->m_player1.Reset();
 	this->m_player2.Reset();
+	
+	this->m_numbersEater1.Reset();
+	this->m_numbersEater2.Reset();
 
 	if (1 <= this->m_level && this->m_level <= 20)
 	{
@@ -617,14 +682,14 @@ void GamePage::Kill(int player)
 	switch (player)
 	{
 	case 1:
-		if (g_pScreen->GetObjectAt(10, 9) == OBJECT_TYPE_NUMBER)
+		if (this->m_player1.GetAttempts() > 0 && g_pScreen->GetObjectAt(10, 9) == OBJECT_TYPE_NUMBER)
 			this->RemoveNumber(10, 9);
 
 		this->m_player1.Kill();
 		break;
 
 	case 2:
-		if (g_pScreen->GetObjectAt(70, 9) == OBJECT_TYPE_NUMBER)
+		if (this->m_player2.GetAttempts() > 0 && g_pScreen->GetObjectAt(70, 9) == OBJECT_TYPE_NUMBER)
 			this->RemoveNumber(70, 9);
 
 		this->m_player2.Kill();

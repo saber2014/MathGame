@@ -5,6 +5,7 @@
 #include "page.h"
 #include "player.h"
 #include "exercise.h"
+#include "numbers_eater.h"
 
 #define TIME_IS_OVER_TIME 1500
 #define ADD_SHOT_TIME 200
@@ -13,6 +14,13 @@
 
 enum MANAGER_CALLBACK;
 class Manager;
+
+struct GamePageNumber
+{
+	int x;
+	int y;
+	int number;
+};
 
 class GamePage : public Page
 {
@@ -23,6 +31,9 @@ private:
 	Player m_player2;
 	Exercise m_exercise1;
 	Exercise m_exercise2;
+	NumbersEater m_numbersEater1;
+	NumbersEater m_numbersEater2;
+	vector<GamePageNumber> m_numbers;
 
 public:
 	GamePage(int level);
