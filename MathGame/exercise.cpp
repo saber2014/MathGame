@@ -127,8 +127,8 @@ void Exercise::GenerateSimple(int level)
 	}
 	else
 	{
-		int max = (int)fmax(this->m_number1, this->m_number2);
-		int min = (int)fmin(this->m_number1, this->m_number2);
+		int max = max(this->m_number1, this->m_number2);
+		int min = min(this->m_number1, this->m_number2);
 
 		this->m_number1 = max;
 		this->m_number2 = min;
@@ -197,8 +197,8 @@ void Exercise::GenerateComplex()
 		}
 	}
 
-	this->m_hide1 = (EXERCISE_HIDE)((int)fmin((double)hide1, (double)hide2));
-	this->m_hide2 = (EXERCISE_HIDE)((int)fmax((double)hide1, (double)hide2));
+	this->m_hide1 = (EXERCISE_HIDE)(min(hide1, hide2));
+	this->m_hide2 = (EXERCISE_HIDE)(max(hide1, hide2));
 
 #if defined(_DEBUG)
 	char buf[255];

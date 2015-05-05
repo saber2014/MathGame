@@ -130,7 +130,7 @@ GamePageNumber NumbersEater::FindClosestNumber(vector<GamePageNumber> &numbers)
 	{
 		int dx = this->m_x - it->x;
 		int dy = this-> m_y - it->y;
-		int dist = (int)sqrt(dx * dx + dy * dy);
+		int dist = (int)sqrt((double)(dx * dx + dy * dy));
 
 		if (dist <= min_dist)
 		{

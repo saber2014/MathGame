@@ -102,7 +102,7 @@ unsigned __int8 CompressedVector::Get(int index)
 			bit = 0;
 		}
 
-		int bitsToRead = (int)fmin(COMPRESSED_VECTOR_BITS - readBits, 8 * sizeof(unsigned __int16) - bit);
+		int bitsToRead = min((int)(COMPRESSED_VECTOR_BITS - readBits), (int)(8 * sizeof(unsigned __int16) - bit));
 		res |= (CompressedVector::GetBits16(this->m_pData[position], bit, bit + bitsToRead - 1)) << readBits;
 
 		readBits += bitsToRead;
@@ -143,7 +143,7 @@ void CompressedVector::Insert(unsigned __int8 value, int index)
 			this->m_currentBit = 0;
 		}
 
-		int bitsToWrite = (int)fmin(8 * sizeof(unsigned __int16) - this->m_currentBit - 1, COMPRESSED_VECTOR_BITS - writtenBits - 1);
+		int bitsToWrite = min((int)(8 * sizeof(unsigned __int16) - this->m_currentBit - 1), (int)(COMPRESSED_VECTOR_BITS - writtenBits - 1));
 		CompressedVector::SetBits(this->m_pData[this->m_currentPosition], CompressedVector::GetBits8(value, writtenBits, writtenBits + bitsToWrite), this->m_currentBit, this->m_currentBit + bitsToWrite);
 
 		writtenBits += bitsToWrite + 1;
