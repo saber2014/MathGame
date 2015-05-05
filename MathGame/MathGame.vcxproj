@@ -80,6 +80,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="compressed_vector.h" />
     <ClInclude Include="console.h" />
+    <ClInclude Include="enums.h" />
     <ClInclude Include="exercise.h" />
     <ClInclude Include="game_page.h" />
     <ClInclude Include="instructions_page.h" />

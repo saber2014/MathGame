@@ -1,40 +1,28 @@
+/*
+ * MathGame - a competitive math game
+ * Copyright (C) 2015  saber2014
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
 #ifndef SCREEN_H
 #define SCREEN_H
 
 #include "common.h"
 #include "console.h"
-
-enum SCREEN_ALIGN
-{
-	SCREEN_ALIGN_DEFAULT = 0,
-	SCREEN_ALIGN_LEFT = 1,
-	SCREEN_ALIGN_HCENTER = 2,
-	SCREEN_ALIGN_RIGHT = 4,
-	SCREEN_ALIGN_TOP = 8,
-	SCREEN_ALIGN_VCENTER = 16,
-	SCREEN_ALIGN_BOTTOM = 32
-};
-
-enum SCREEN_MESSAGE_STYLE
-{
-	SCREEN_MESSAGE_STYLE_DEFAULT = -1,
-	SCREEN_MESSAGE_STYLE_BLUE = 0,
-	SCREEN_MESSAGE_STYLE_GREEN,
-	SCREEN_MESSAGE_STYLE_AQUA,
-	SCREEN_MESSAGE_STYLE_RED,
-	SCREEN_MESSAGE_STYLE_PURPLE,
-	SCREEN_MESSAGE_STYLE_YELLOW,
-};
-
-enum OBJECT_TYPE
-{
-	OBJECT_TYPE_NONE = 0,
-	OBJECT_TYPE_PLAYER1,
-	OBJECT_TYPE_PLAYER2,
-	OBJECT_TYPE_NUMBER,
-	OBJECT_TYPE_SHOT,
-	OBJECT_TYPE_NUMBERS_EATER
-};
 
 class Screen
 {

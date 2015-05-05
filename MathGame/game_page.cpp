@@ -1,3 +1,23 @@
+/*
+ * MathGame - a competitive math game
+ * Copyright (C) 2015  saber2014
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
 #include "game_page.h"
 #include "screen.h"
 #include "manager.h"
@@ -34,7 +54,7 @@ GamePage::GamePage(int level)
 
 char *GamePage::GetName()
 {
-	return "Game";
+	return (char *)"Game";
 }
 
 void GamePage::Print()
@@ -132,7 +152,7 @@ void GamePage::PrintCounter()
 	sprintf(buf, "%d", (int)this->m_counter);
 
 	g_pConsole->SetPosition(0, 1);
-	g_pScreen->PrintAligned("          ", SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_GRAY);
+	g_pScreen->PrintAligned((char *)"          ", SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_GRAY);
 	g_pScreen->PrintAligned(buf, SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_BRIGHT_WHITE, CONSOLE_COLOR_GRAY);
 }
 
@@ -141,7 +161,7 @@ void GamePage::PrintExercises()
 	g_pConsole->SetPosition(0, 2);
 
 	for (int i = 0; i < WIDTH; i++)
-		g_pScreen->Print(" ", i, 2, CONSOLE_COLOR_GRAY, CONSOLE_COLOR_GRAY);
+		g_pScreen->Print((char *)" ", i, 2, CONSOLE_COLOR_GRAY, CONSOLE_COLOR_GRAY);
 
 	g_pScreen->PrintAligned((char *)this->m_exercise1.GetExercise().c_str(), SCREEN_ALIGN_LEFT, CONSOLE_COLOR_LIGHT_YELLOW, CONSOLE_COLOR_GRAY);
 	g_pScreen->PrintAligned((char *)this->m_exercise2.GetExercise().c_str(), SCREEN_ALIGN_RIGHT, CONSOLE_COLOR_LIGHT_YELLOW, CONSOLE_COLOR_GRAY);
@@ -154,7 +174,7 @@ void GamePage::PrintHeader()
 		for (int j = 0; j < WIDTH; j++)
 		{
 			g_pConsole->SetPosition(j, i);
-			g_pScreen->PrintAligned(" ", SCREEN_ALIGN_DEFAULT, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_GRAY);
+			g_pScreen->PrintAligned((char *)" ", SCREEN_ALIGN_DEFAULT, CONSOLE_COLOR_DEFAULT, CONSOLE_COLOR_GRAY);
 		}
 	}
 
@@ -654,7 +674,7 @@ void GamePage::Tick(Manager *pManager)
 
 		if (this->m_level < 40)
 		{
-			g_pScreen->PrintMessage("BOTH PLAYERS ARE KILLED.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
+			g_pScreen->PrintMessage((char *)"BOTH PLAYERS ARE KILLED.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
 			g_pConsole->Wait(MESSAGE_WAIT_TIME);
 		}
 
@@ -667,7 +687,7 @@ void GamePage::Tick(Manager *pManager)
 
 		if (this->m_level < 40)
 		{
-			g_pScreen->PrintMessage("TIME IS OVER.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
+			g_pScreen->PrintMessage((char *)"TIME IS OVER.\nMOVING TO THE NEXT LEVEL!", SCREEN_MESSAGE_STYLE_RED);
 			g_pConsole->Wait(MESSAGE_WAIT_TIME);
 		}
 
@@ -702,7 +722,7 @@ void GamePage::Reset(Manager *pManager)
 
 	if (this->m_level > 40)
 	{
-		g_pScreen->PrintMessage("CONGRATULATIONS! YOU COMPLETED THE GAME.", SCREEN_MESSAGE_STYLE_RED);
+		g_pScreen->PrintMessage((char *)"CONGRATULATIONS! YOU COMPLETED THE GAME.", SCREEN_MESSAGE_STYLE_RED);
 		g_pConsole->Wait(MESSAGE_WAIT_TIME);
 
 		pManager->Callback(MANAGER_CALLBACK_GAME_OVER);

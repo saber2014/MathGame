@@ -1,3 +1,23 @@
+/*
+ * MathGame - a competitive math game
+ * Copyright (C) 2015  saber2014
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
 #include "exercise.h"
 
 CompressedVector Exercise::m_lookupTable[EXERCISE_SIGN_DIVISION][EXERCISE_SIGN_DIVISION];
@@ -133,6 +153,13 @@ void Exercise::GenerateSimple(int level)
 	}
 
 	this->m_hide1 = (EXERCISE_HIDE)(2 + rand() % 2);
+
+#if defined(_DEBUG)
+	char buf[255];
+	sprintf(buf, "%d %d %d\n", this->m_number1, this->m_number2, this->m_number3);
+
+	OutputDebugMessage(buf);
+#endif
 }
 
 void Exercise::GenerateComplex()
@@ -173,7 +200,7 @@ void Exercise::GenerateComplex()
 	this->m_hide1 = (EXERCISE_HIDE)((int)fmin((double)hide1, (double)hide2));
 	this->m_hide2 = (EXERCISE_HIDE)((int)fmax((double)hide1, (double)hide2));
 
-#if defined(_DEBUG) && defined(_MSC_VER)
+#if defined(_DEBUG)
 	char buf[255];
 	sprintf(buf, "%d %d %d %d\n", this->m_number1, this->m_number2, this->m_number3, this->m_number4);
 	

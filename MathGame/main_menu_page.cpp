@@ -1,3 +1,23 @@
+/*
+ * MathGame - a competitive math game
+ * Copyright (C) 2015  saber2014
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
 #include "main_menu_page.h"
 #include "screen.h"
 #include "keyboard.h"
@@ -14,13 +34,13 @@ MainMenuPage::MainMenuPage()
 
 char *MainMenuPage::GetName()
 {
-	return "Main Menu";
+	return (char *)"Main Menu";
 }
 
 void MainMenuPage::Print()
 {
 	g_pConsole->SetPosition(0, 2);
-	g_pScreen->PrintAligned("MATH GAME", SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_LIGHT_GREEN, CONSOLE_COLOR_GREEN);
+	g_pScreen->PrintAligned((char *)"MATH GAME", SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_LIGHT_GREEN, CONSOLE_COLOR_GREEN);
 
 	this->PrintItems();
 	this->PrintMessage();
@@ -74,7 +94,7 @@ void MainMenuPage::PrintItems()
 void MainMenuPage::PrintMessage()
 {
 	g_pConsole->SetPosition(0, 4 + MENU_ITEMS * 2 + 2);
-	g_pScreen->PrintAligned("USE UP AND DOWN ARROWS TO SELECT AN ITEM\nALTERNATIVELY, TYPE AN ITEM NUMBER.\nTHEN PRESS ENETER", SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_AQUA);
+	g_pScreen->PrintAligned((char *)"USE UP AND DOWN ARROWS TO SELECT AN ITEM\nALTERNATIVELY, TYPE AN ITEM NUMBER.\nTHEN PRESS ENETER", SCREEN_ALIGN_HCENTER, CONSOLE_COLOR_LIGHT_AQUA, CONSOLE_COLOR_AQUA);
 }
 
 int MainMenuPage::GetSelectedItem()

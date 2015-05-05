@@ -72,6 +72,9 @@
     <ClInclude Include="pause_menu_page.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="console.cpp">

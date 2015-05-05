@@ -1,3 +1,23 @@
+/*
+ * MathGame - a competitive math game
+ * Copyright (C) 2015  saber2014
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
 #include "manager.h"
 #include "console.h"
 #include "screen.h"
@@ -19,7 +39,7 @@ Manager::Manager()
 	g_pScreen = new Screen();
 	g_pKeyboard = new Keyboard();
 
-	g_pConsole->SetTitle("Math Game");
+	g_pConsole->SetTitle((char *)"Math Game");
 	g_pConsole->ShowCursor(false);
 	g_pConsole->SetBufferSize(WIDTH, HEIGHT);
 
@@ -124,7 +144,7 @@ void Manager::Run()
 					if (levelNumber < 1 || levelNumber > 40)
 					{
 						g_pConsole->ShowCursor(false);
-						g_pScreen->PrintMessage("INCORRECT LEVEL NUMBER!\nPLEASE TRY AGAIN.", SCREEN_MESSAGE_STYLE_RED);
+						g_pScreen->PrintMessage((char *)"INCORRECT LEVEL NUMBER!\nPLEASE TRY AGAIN.", SCREEN_MESSAGE_STYLE_RED);
 						g_pConsole->Wait(MESSAGE_WAIT_TIME);
 
 						g_pConsole->Clear();
@@ -166,7 +186,7 @@ void Manager::Run()
 					case PAUSE_MENU_ITEM_NEXT:
 						if (this->m_savedGamePage->GetLevel() + 1 > 40)
 						{
-							g_pScreen->PrintMessage("CONGRATULATIONS! YOU COMPLETED THE GAME.", SCREEN_MESSAGE_STYLE_RED);
+							g_pScreen->PrintMessage((char *)"CONGRATULATIONS! YOU COMPLETED THE GAME.", SCREEN_MESSAGE_STYLE_RED);
 							g_pConsole->Wait(MESSAGE_WAIT_TIME);
 
 							this->SwitchPage(new MainMenuPage());

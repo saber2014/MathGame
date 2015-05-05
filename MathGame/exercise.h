@@ -1,3 +1,23 @@
+/*
+ * MathGame - a competitive math game
+ * Copyright (C) 2015  saber2014
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
 #ifndef EXERCISE_H
 #define EXERCISE_H
 
@@ -7,31 +27,6 @@
 #define EXERCISE_MIN_VALUE 1
 #define EXERCISE_MAX_VALUE 21
 #define EXERCISE_INVALID_VALUE -1
-
-enum EXERCISE_TYPE
-{
-	EXERCISE_TYPE_DEFAULT = 0,
-	EXERCISE_TYPE_SIMPLE,
-	EXERCISE_TYPE_COMPLEX
-};
-
-enum EXERCISE_SIGN
-{
-	EXERCISE_SIGN_DEFAULT = 0,
-	EXERCISE_SIGN_PLUS,
-	EXERCISE_SIGN_MINUS,
-	EXERCISE_SIGN_MULTIPLICATION,
-	EXERCISE_SIGN_DIVISION
-};
-
-enum EXERCISE_HIDE
-{
-	EXERCISE_HIDE_DEFAULT = 0,
-	EXERCISE_HIDE_NUMBER1,
-	EXERCISE_HIDE_NUMBER2,
-	EXERCISE_HIDE_NUMBER3,
-	EXERCISE_HIDE_NUMBER4
-};
 
 class Exercise
 {
