@@ -127,28 +127,28 @@ void Exercise::GenerateSimple(int level)
 	}
 	else
 	{
-		int max = max(this->m_number1, this->m_number2);
-		int min = min(this->m_number1, this->m_number2);
+		int max_number = max(this->m_number1, this->m_number2);
+		int min_number = min(this->m_number1, this->m_number2);
 
-		this->m_number1 = max;
-		this->m_number2 = min;
+		this->m_number1 = max_number;
+		this->m_number2 = min_number;
 
 		if (this->m_sign1 == EXERCISE_SIGN_MINUS)
 		{
-			if (max - min == 0)
+			if (max_number - min_number == 0)
 			{
 				this->m_number1++;
-				max++;
+				max_number++;
 			}
 
-			this->m_number3 = max - min;
+			this->m_number3 = max_number - min_number;
 		}
 		else
 		{
-			if (max % min != 0)
-				this->m_number1 -= max % min;
+			if (max_number % min_number != 0)
+				this->m_number1 -= max_number % min_number;
 
-			this->m_number3 = max / min;
+			this->m_number3 = max_number / min_number;
 		}
 	}
 
